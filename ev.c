@@ -166,7 +166,11 @@ extern "C" {
 /* this block tries to deduce configuration from header-defined symbols and defaults */
 
 #ifndef EV_USE_MONOTONIC
-# define EV_USE_MONOTONIC 0
+# if defined (_POSIX_MONOTONIC_CLOCK) && _POSIX_MONOTONIC_CLOCK >= 0
+#  define EV_USE_MONOTONIC 1
+# else
+#  define EV_USE_MONOTONIC 0
+# endif
 #endif
 
 #ifndef EV_USE_REALTIME
@@ -174,7 +178,11 @@ extern "C" {
 #endif
 
 #ifndef EV_USE_NANOSLEEP
-# define EV_USE_NANOSLEEP 0
+# if _POSIX_C_SOURCE >= 199309L
+#  define EV_USE_NANOSLEEP 1
+# else
+#  define EV_USE_NANOSLEEP 0
+# endif
 #endif
 
 #ifndef EV_USE_SELECT
@@ -701,13 +709,13 @@ fd_reify (EV_P)
 #if EV_SELECT_IS_WINSOCKET
       if (events)
         {
-          unsigned long argp;
+          unsigned long arg;
           #ifdef EV_FD_TO_WIN32_HANDLE
             anfd->handle = EV_FD_TO_WIN32_HANDLE (fd);
           #else
             anfd->handle = _get_osfhandle (fd);
           #endif
-          assert (("libev only supports socket fds in this configuration", ioctlsocket (anfd->handle, FIONREAD, &argp) == 0));
+          assert (("libev only supports socket fds in this configuration", ioctlsocket (anfd->handle, FIONREAD, &arg) == 0));
         }
 #endif
 
@@ -770,7 +778,7 @@ fd_ebadf (EV_P)
 
   for (fd = 0; fd < anfdmax; ++fd)
     if (anfds [fd].events)
-      if (!fd_valid (fd) == -1 && errno == EBADF)
+      if (!fd_valid (fd) && errno == EBADF)
         fd_kill (EV_A_ fd);
 }
 
@@ -977,7 +985,7 @@ void inline_speed
 fd_intern (int fd)
 {
 #ifdef _WIN32
-  int arg = 1;
+  unsigned long arg = 1;
   ioctlsocket (_get_osfhandle (fd), FIONBIO, &arg);
 #else
   fcntl (fd, F_SETFD, FD_CLOEXEC);
@@ -2561,6 +2569,12 @@ infy_fork (EV_P)
     }
 }
 
+#endif
+
+#ifdef _WIN32
+# define EV_LSTAT(p,b) _stati64 (p, b)
+#else
+# define EV_LSTAT(p,b) lstat (p, b)
 #endif
 
 void

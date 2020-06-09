@@ -4,63 +4,63 @@ libev - a high performance full-featured event loop written in C
 
 =head1 SYNOPSIS
 
-  #include <ev.h>
+   #include <ev.h>
 
 =head2 EXAMPLE PROGRAM
 
-  // a single header file is required
-  #include <ev.h>
+   // a single header file is required
+   #include <ev.h>
 
-  // every watcher type has its own typedef'd struct
-  // with the name ev_<type>
-  ev_io stdin_watcher;
-  ev_timer timeout_watcher;
+   // every watcher type has its own typedef'd struct
+   // with the name ev_<type>
+   ev_io stdin_watcher;
+   ev_timer timeout_watcher;
 
-  // all watcher callbacks have a similar signature
-  // this callback is called when data is readable on stdin
-  static void
-  stdin_cb (EV_P_ struct ev_io *w, int revents)
-  {
-    puts ("stdin ready");
-    // for one-shot events, one must manually stop the watcher
-    // with its corresponding stop function.
-    ev_io_stop (EV_A_ w);
+   // all watcher callbacks have a similar signature
+   // this callback is called when data is readable on stdin
+   static void
+   stdin_cb (EV_P_ struct ev_io *w, int revents)
+   {
+     puts ("stdin ready");
+     // for one-shot events, one must manually stop the watcher
+     // with its corresponding stop function.
+     ev_io_stop (EV_A_ w);
 
-    // this causes all nested ev_loop's to stop iterating
-    ev_unloop (EV_A_ EVUNLOOP_ALL);
-  }
+     // this causes all nested ev_loop's to stop iterating
+     ev_unloop (EV_A_ EVUNLOOP_ALL);
+   }
 
-  // another callback, this time for a time-out
-  static void
-  timeout_cb (EV_P_ struct ev_timer *w, int revents)
-  {
-    puts ("timeout");
-    // this causes the innermost ev_loop to stop iterating
-    ev_unloop (EV_A_ EVUNLOOP_ONE);
-  }
+   // another callback, this time for a time-out
+   static void
+   timeout_cb (EV_P_ struct ev_timer *w, int revents)
+   {
+     puts ("timeout");
+     // this causes the innermost ev_loop to stop iterating
+     ev_unloop (EV_A_ EVUNLOOP_ONE);
+   }
 
-  int
-  main (void)
-  {
-    // use the default event loop unless you have special needs
-    struct ev_loop *loop = ev_default_loop (0);
+   int
+   main (void)
+   {
+     // use the default event loop unless you have special needs
+     struct ev_loop *loop = ev_default_loop (0);
 
-    // initialise an io watcher, then start it
-    // this one will watch for stdin to become readable
-    ev_io_init (&stdin_watcher, stdin_cb, /*STDIN_FILENO*/ 0, EV_READ);
-    ev_io_start (loop, &stdin_watcher);
+     // initialise an io watcher, then start it
+     // this one will watch for stdin to become readable
+     ev_io_init (&stdin_watcher, stdin_cb, /*STDIN_FILENO*/ 0, EV_READ);
+     ev_io_start (loop, &stdin_watcher);
 
-    // initialise a timer watcher, then start it
-    // simple non-repeating 5.5 second timeout
-    ev_timer_init (&timeout_watcher, timeout_cb, 5.5, 0.);
-    ev_timer_start (loop, &timeout_watcher);
+     // initialise a timer watcher, then start it
+     // simple non-repeating 5.5 second timeout
+     ev_timer_init (&timeout_watcher, timeout_cb, 5.5, 0.);
+     ev_timer_start (loop, &timeout_watcher);
 
-    // now wait for events to arrive
-    ev_loop (loop, 0);
+     // now wait for events to arrive
+     ev_loop (loop, 0);
 
-    // unloop was called, so exit
-    return 0;
-  }
+     // unloop was called, so exit
+     return 0;
+   }
 
 =head1 DESCRIPTION
 
@@ -115,7 +115,7 @@ Libev represents time as a single floating point number, representing the
 the beginning of 1970, details are complicated, don't ask). This type is
 called C<ev_tstamp>, which is what you should use too. It usually aliases
 to the C<double> type in C, and when you need to do any calculations on
-it, you should treat it as some floatingpoint value. Unlike the name
+it, you should treat it as some floating point value. Unlike the name
 component C<stamp> might indicate, it is also used for time differences
 throughout libev.
 
@@ -125,7 +125,7 @@ Libev knows three classes of errors: operating system errors, usage errors
 and internal errors (bugs).
 
 When libev catches an operating system error it cannot handle (for example
-a syscall indicating a condition libev cannot fix), it calls the callback
+a system call indicating a condition libev cannot fix), it calls the callback
 set via C<ev_set_syserr_cb>, which is supposed to fix the problem or
 abort. The default is to print a diagnostic message and to call C<abort
 ()>.
@@ -157,7 +157,7 @@ you actually want to know.
 
 Sleep for the given interval: The current thread will be blocked until
 either it is interrupted or the given time interval has passed. Basically
-this is a subsecond-resolution C<sleep ()>.
+this is a sub-second-resolution C<sleep ()>.
 
 =item int ev_version_major ()
 
@@ -180,9 +180,9 @@ not a problem.
 Example: Make sure we haven't accidentally been linked against the wrong
 version.
 
-  assert (("libev version mismatch",
-           ev_version_major () == EV_VERSION_MAJOR
-           && ev_version_minor () >= EV_VERSION_MINOR));
+   assert (("libev version mismatch",
+            ev_version_major () == EV_VERSION_MAJOR
+            && ev_version_minor () >= EV_VERSION_MINOR));
 
 =item unsigned int ev_supported_backends ()
 
@@ -194,15 +194,15 @@ a description of the set values.
 Example: make sure we have the epoll method, because yeah this is cool and
 a must have and can we have a torrent of it please!!!11
 
-  assert (("sorry, no epoll, no sex",
-           ev_supported_backends () & EVBACKEND_EPOLL));
+   assert (("sorry, no epoll, no sex",
+            ev_supported_backends () & EVBACKEND_EPOLL));
 
 =item unsigned int ev_recommended_backends ()
 
 Return the set of all backends compiled into this binary of libev and also
 recommended for this platform. This set is often smaller than the one
 returned by C<ev_supported_backends>, as for example kqueue is broken on
-most BSDs and will not be autodetected unless you explicitly request it
+most BSDs and will not be auto-detected unless you explicitly request it
 (assuming you know what you are doing). This is the set of backends that
 libev will probe for if you specify no backends explicitly.
 
@@ -254,10 +254,10 @@ retries (example requires a standards-compliant C<realloc>).
 
 =item ev_set_syserr_cb (void (*cb)(const char *msg));
 
-Set the callback function to call on a retryable syscall error (such
+Set the callback function to call on a retryable system call error (such
 as failed select, poll, epoll_wait). The message is a printable string
 indicating the system call or subsystem causing the problem. If this
-callback is set, then libev will expect it to remedy the sitution, no
+callback is set, then libev will expect it to remedy the situation, no
 matter what, when it returns. That is, libev will generally retry the
 requested operation, or, if the condition doesn't go away, do bad stuff
 (such as abort).
@@ -300,7 +300,7 @@ as loops cannot bes hared easily between threads anyway).
 
 The default loop is the only loop that can handle C<ev_signal> and
 C<ev_child> watchers, and to do this, it always registers a handler
-for C<SIGCHLD>. If this is a problem for your app you can either
+for C<SIGCHLD>. If this is a problem for your application you can either
 create a dynamic loop with C<ev_loop_new> that doesn't do that, or you
 can simply overwrite the C<SIGCHLD> signal handler I<after> calling
 C<ev_default_init>.
@@ -319,7 +319,7 @@ thing, believe me).
 
 =item C<EVFLAG_NOENV>
 
-If this flag bit is ored into the flag value (or the program runs setuid
+If this flag bit is or'ed into the flag value (or the program runs setuid
 or setgid) then libev will I<not> look at the environment variable
 C<LIBEV_FLAGS>. Otherwise (the default), this environment variable will
 override the flags completely if it is found in the environment. This is
@@ -336,14 +336,14 @@ This works by calling C<getpid ()> on every iteration of the loop,
 and thus this might slow down your event loop if you do a lot of loop
 iterations and little real work, but is usually not noticeable (on my
 GNU/Linux system for example, C<getpid> is actually a simple 5-insn sequence
-without a syscall and thus I<very> fast, but my GNU/Linux system also has
+without a system call and thus I<very> fast, but my GNU/Linux system also has
 C<pthread_atfork> which is even faster).
 
 The big advantage of this flag is that you can forget about fork (and
 forget about forgetting to tell libev about forking) when you use this
 flag.
 
-This flag setting cannot be overriden or specified in the C<LIBEV_FLAGS>
+This flag setting cannot be overridden or specified in the C<LIBEV_FLAGS>
 environment variable.
 
 =item C<EVBACKEND_SELECT>  (value 1, portable select backend)
@@ -355,7 +355,7 @@ using this backend. It doesn't scale too well (O(highest_fd)), but its
 usually the fastest backend for a low number of (low-numbered :) fds.
 
 To get good performance out of this backend you need a high amount of
-parallelity (most of the file descriptors should be busy). If you are
+parallelism (most of the file descriptors should be busy). If you are
 writing a server, you should C<accept ()> in a loop to accept as many
 connections as possible during one iteration. You might also want to have
 a look at C<ev_set_io_collect_interval ()> to increase the amount of
@@ -377,11 +377,11 @@ but it scales phenomenally better. While poll and select usually scale
 like O(total_fds) where n is the total number of fds (or the highest fd),
 epoll scales either O(1) or O(active_fds). The epoll design has a number
 of shortcomings, such as silently dropping events in some hard-to-detect
-cases and requiring a syscall per fd change, no fork support and bad
+cases and requiring a system call per fd change, no fork support and bad
 support for dup.
 
 While stopping, setting and starting an I/O watcher in the same iteration
-will result in some caching, there is still a syscall per such incident
+will result in some caching, there is still a system call per such incident
 (because the fd could point to a different file description now), so its
 best to avoid that. Also, C<dup ()>'ed file descriptors might not work
 very well if you register events for both fds.
@@ -394,7 +394,7 @@ Best performance from this backend is achieved by not unregistering all
 watchers for a file descriptor until it has been closed, if possible, i.e.
 keep at least one watcher active per fd at all times.
 
-While nominally embeddeble in other event loops, this feature is broken in
+While nominally embeddable in other event loops, this feature is broken in
 all kernel versions tested so far.
 
 =item C<EVBACKEND_KQUEUE>  (value 8, most BSD clones)
@@ -402,7 +402,7 @@ all kernel versions tested so far.
 Kqueue deserves special mention, as at the time of this writing, it
 was broken on all BSDs except NetBSD (usually it doesn't work reliably
 with anything but sockets and pipes, except on Darwin, where of course
-it's completely useless). For this reason it's not being "autodetected"
+it's completely useless). For this reason it's not being "auto-detected"
 unless you explicitly specify it explicitly in the flags (i.e. using
 C<EVBACKEND_KQUEUE>) or libev was compiled on a known-to-be-good (-enough)
 system like NetBSD.
@@ -414,7 +414,7 @@ the target platform). See C<ev_embed> watchers for more info.
 It scales in the same way as the epoll backend, but the interface to the
 kernel is more efficient (which says nothing about its actual speed, of
 course). While stopping, setting and starting an I/O watcher does never
-cause an extra syscall as with C<EVBACKEND_EPOLL>, it still adds up to
+cause an extra system call as with C<EVBACKEND_EPOLL>, it still adds up to
 two event changes per incident, support for C<fork ()> is very bad and it
 drops fds silently in similarly hard-to-detect cases.
 
@@ -439,7 +439,7 @@ immensely.
 This uses the Solaris 10 event port mechanism. As with everything on Solaris,
 it's really slow, but it still scales very well (O(active_fds)).
 
-Please note that solaris event ports can deliver a lot of spurious
+Please note that Solaris event ports can deliver a lot of spurious
 notifications, so you need to use non-blocking I/O or other means to avoid
 blocking when no data (or space) is available.
 
@@ -462,25 +462,25 @@ It is definitely not recommended to use this flag.
 
 =back
 
-If one or more of these are ored into the flags value, then only these
+If one or more of these are or'ed into the flags value, then only these
 backends will be tried (in the reverse order as listed here). If none are
 specified, all backends in C<ev_recommended_backends ()> will be tried.
 
 The most typical usage is like this:
 
-  if (!ev_default_loop (0))
-    fatal ("could not initialise libev, bad $LIBEV_FLAGS in environment?");
+   if (!ev_default_loop (0))
+     fatal ("could not initialise libev, bad $LIBEV_FLAGS in environment?");
 
 Restrict libev to the select and poll backends, and do not allow
 environment settings to be taken into account:
 
-  ev_default_loop (EVBACKEND_POLL | EVBACKEND_SELECT | EVFLAG_NOENV);
+   ev_default_loop (EVBACKEND_POLL | EVBACKEND_SELECT | EVFLAG_NOENV);
 
 Use whatever libev has to offer, but make sure that kqueue is used if
 available (warning, breaks stuff, best use only with your own private
 event loop and only if you know the OS supports your types of fds):
 
-  ev_default_loop (ev_recommended_backends () | EVBACKEND_KQUEUE);
+   ev_default_loop (ev_recommended_backends () | EVBACKEND_KQUEUE);
 
 =item struct ev_loop *ev_loop_new (unsigned int flags)
 
@@ -495,16 +495,16 @@ default loop in the "main" or "initial" thread.
 
 Example: Try to create a event loop that uses epoll and nothing else.
 
-  struct ev_loop *epoller = ev_loop_new (EVBACKEND_EPOLL | EVFLAG_NOENV);
-  if (!epoller)
-    fatal ("no epoll found here, maybe it hides under your chair");
+   struct ev_loop *epoller = ev_loop_new (EVBACKEND_EPOLL | EVFLAG_NOENV);
+   if (!epoller)
+     fatal ("no epoll found here, maybe it hides under your chair");
 
 =item ev_default_destroy ()
 
 Destroys the default loop again (frees all memory and kernel state
 etc.). None of the active event watchers will be stopped in the normal
 sense, so e.g. C<ev_is_active> might still return true. It is your
-responsibility to either stop all watchers cleanly yoursef I<before>
+responsibility to either stop all watchers cleanly yourself I<before>
 calling this function, or cope with the fact afterwards (which is usually
 the easiest thing, you can just ignore the watchers and/or C<free ()> them
 for example).
@@ -595,7 +595,7 @@ those events and any outstanding ones, but will not block your process in
 case there are no events and will return after one iteration of the loop.
 
 A flags value of C<EVLOOP_ONESHOT> will look for new events (waiting if
-neccessary) and will handle those and any outstanding ones. It will block
+necessary) and will handle those and any outstanding ones. It will block
 your process until at least one new event arrives, and will return after
 one iteration of the loop. This is useful if you are waiting for some
 external event in conjunction with something not expressible using other
@@ -666,15 +666,15 @@ respectively).
 Example: Create a signal watcher, but keep it from keeping C<ev_loop>
 running when nothing else is active.
 
-  struct ev_signal exitsig;
-  ev_signal_init (&exitsig, sig_cb, SIGINT);
-  ev_signal_start (loop, &exitsig);
-  evf_unref (loop);
+   struct ev_signal exitsig;
+   ev_signal_init (&exitsig, sig_cb, SIGINT);
+   ev_signal_start (loop, &exitsig);
+   evf_unref (loop);
 
 Example: For some weird reason, unregister the above signal handler again.
 
-  ev_ref (loop);
-  ev_signal_stop (loop, &exitsig);
+   ev_ref (loop);
+   ev_signal_stop (loop, &exitsig);
 
 =item ev_set_io_collect_interval (loop, ev_tstamp interval)
 
@@ -706,11 +706,11 @@ latency (the watcher callback will be called later). C<ev_io> watchers
 will not be affected. Setting this to a non-null value will not introduce
 any overhead in libev.
 
-Many (busy) programs can usually benefit by setting the io collect
+Many (busy) programs can usually benefit by setting the I/O collect
 interval to a value near C<0.1> or so, which is often enough for
 interactive servers (of course not for games), likewise for timeouts. It
 usually doesn't make much sense to set it to a lower value than C<0.01>,
-as this approsaches the timing granularity of most systems.
+as this approaches the timing granularity of most systems.
 
 =item ev_loop_verify (loop)
 
@@ -732,18 +732,18 @@ A watcher is a structure that you create and register to record your
 interest in some event. For instance, if you want to wait for STDIN to
 become readable, you would create an C<ev_io> watcher for that:
 
-  static void my_cb (struct ev_loop *loop, struct ev_io *w, int revents)
-  {
-    ev_io_stop (w);
-    ev_unloop (loop, EVUNLOOP_ALL);
-  }
+   static void my_cb (struct ev_loop *loop, struct ev_io *w, int revents)
+   {
+     ev_io_stop (w);
+     ev_unloop (loop, EVUNLOOP_ALL);
+   }
 
-  struct ev_loop *loop = ev_default_loop (0);
-  struct ev_io stdin_watcher;
-  ev_init (&stdin_watcher, my_cb);
-  ev_io_set (&stdin_watcher, STDIN_FILENO, EV_READ);
-  ev_io_start (loop, &stdin_watcher);
-  ev_loop (loop, 0);
+   struct ev_loop *loop = ev_default_loop (0);
+   struct ev_io stdin_watcher;
+   ev_init (&stdin_watcher, my_cb);
+   ev_io_set (&stdin_watcher, STDIN_FILENO, EV_READ);
+   ev_io_start (loop, &stdin_watcher);
+   ev_loop (loop, 0);
 
 As you can see, you are responsible for allocating the memory for your
 watcher structures (and it is usually a bad idea to do this on the stack,
@@ -751,7 +751,7 @@ although this can sometimes be quite valid).
 
 Each watcher structure must be initialised by a call to C<ev_init
 (watcher *, callback)>, which expects a callback to be provided. This
-callback gets invoked each time the event occurs (or, in the case of io
+callback gets invoked each time the event occurs (or, in the case of I/O
 watchers, each time the event loop detects that the file descriptor given
 is readable and/or writable).
 
@@ -837,7 +837,7 @@ The given async watcher has been asynchronously notified (see C<ev_async>).
 
 =item C<EV_ERROR>
 
-An unspecified error has occured, the watcher has been stopped. This might
+An unspecified error has occurred, the watcher has been stopped. This might
 happen because the watcher could not be properly started because libev
 ran out of memory, a file descriptor was found to be closed or any other
 problem. You best act on it by reporting the problem and somehow coping
@@ -846,7 +846,7 @@ with the watcher being stopped.
 Libev will usually signal a few "dummy" events together with an error,
 for example it might indicate that a fd is readable or writable, and if
 your callbacks is well-written it can just attempt the operation and cope
-with the error from read() or write(). This will not work in multithreaded
+with the error from read() or write(). This will not work in multi-threaded
 programs, though, so beware.
 
 =back
@@ -886,8 +886,8 @@ Although some watcher types do not have type-specific arguments
 
 =item C<ev_TYPE_init> (ev_TYPE *watcher, callback, [args])
 
-This convinience macro rolls both C<ev_init> and C<ev_TYPE_set> macro
-calls into a single call. This is the most convinient method to initialise
+This convenience macro rolls both C<ev_init> and C<ev_TYPE_set> macro
+calls into a single call. This is the most convenient method to initialise
 a watcher. The same limitations apply, of course.
 
 =item C<ev_TYPE_start> (loop *, ev_TYPE *watcher)
@@ -980,22 +980,22 @@ don't want to allocate memory and store a pointer to it in that data
 member, you can also "subclass" the watcher type and provide your own
 data:
 
-  struct my_io
-  {
-    struct ev_io io;
-    int otherfd;
-    void *somedata;
-    struct whatever *mostinteresting;
-  }
+   struct my_io
+   {
+     struct ev_io io;
+     int otherfd;
+     void *somedata;
+     struct whatever *mostinteresting;
+   }
 
 And since your callback will be called with a pointer to the watcher, you
 can cast it back to your own type:
 
-  static void my_cb (struct ev_loop *loop, struct ev_io *w_, int revents)
-  {
-    struct my_io *w = (struct my_io *)w_;
-    ...
-  }
+   static void my_cb (struct ev_loop *loop, struct ev_io *w_, int revents)
+   {
+     struct my_io *w = (struct my_io *)w_;
+     ...
+   }
 
 More interesting and less C-conformant ways of casting your callback type
 instead have been omitted.
@@ -1003,31 +1003,31 @@ instead have been omitted.
 Another common scenario is having some data structure with multiple
 watchers:
 
-  struct my_biggy
-  {
-    int some_data;
-    ev_timer t1;
-    ev_timer t2;
-  }
+   struct my_biggy
+   {
+     int some_data;
+     ev_timer t1;
+     ev_timer t2;
+   }
 
 In this case getting the pointer to C<my_biggy> is a bit more complicated,
 you need to use C<offsetof>:
 
-  #include <stddef.h>
+   #include <stddef.h>
 
-  static void
-  t1_cb (EV_P_ struct ev_timer *w, int revents)
-  {
-    struct my_biggy big = (struct my_biggy *
-      (((char *)w) - offsetof (struct my_biggy, t1));
-  }
+   static void
+   t1_cb (EV_P_ struct ev_timer *w, int revents)
+   {
+     struct my_biggy big = (struct my_biggy *
+       (((char *)w) - offsetof (struct my_biggy, t1));
+   }
 
-  static void
-  t2_cb (EV_P_ struct ev_timer *w, int revents)
-  {
-    struct my_biggy big = (struct my_biggy *
-      (((char *)w) - offsetof (struct my_biggy, t2));
-  }
+   static void
+   t2_cb (EV_P_ struct ev_timer *w, int revents)
+   {
+     struct my_biggy big = (struct my_biggy *
+       (((char *)w) - offsetof (struct my_biggy, t2));
+   }
 
 
 =head1 WATCHER TYPES
@@ -1069,13 +1069,13 @@ Another thing you have to watch out for is that it is quite easy to
 receive "spurious" readiness notifications, that is your callback might
 be called with C<EV_READ> but a subsequent C<read>(2) will actually block
 because there is no data. Not only are some backends known to create a
-lot of those (for example solaris ports), it is very easy to get into
+lot of those (for example Solaris ports), it is very easy to get into
 this situation even with a relatively standard program structure. Thus
 it is best to always use non-blocking I/O: An extra C<read>(2) returning
 C<EAGAIN> is far preferable to a program hanging until some data arrives.
 
 If you cannot run the fd in non-blocking mode (for example you should not
-play around with an Xlib connection), then you have to seperately re-test
+play around with an Xlib connection), then you have to separately re-test
 whether a file descriptor is really ready with a known-to-be good interface
 such as poll (fortunately in our Xlib example, Xlib already does this on
 its own, so its quite safe to use).
@@ -1145,7 +1145,7 @@ somewhere, as that would have given you a big clue).
 =item ev_io_set (ev_io *, int fd, int events)
 
 Configures an C<ev_io> watcher. The C<fd> is the file descriptor to
-rceeive events for and events is either C<EV_READ>, C<EV_WRITE> or
+receive events for and events is either C<EV_READ>, C<EV_WRITE> or
 C<EV_READ | EV_WRITE> to receive the given events.
 
 =item int fd [read-only]
@@ -1164,19 +1164,19 @@ Example: Call C<stdin_readable_cb> when STDIN_FILENO has become, well
 readable, but only once. Since it is likely line-buffered, you could
 attempt to read a whole line in the callback.
 
-  static void
-  stdin_readable_cb (struct ev_loop *loop, struct ev_io *w, int revents)
-  {
-     ev_io_stop (loop, w);
-    .. read from stdin here (or from w->fd) and haqndle any I/O errors
-  }
+   static void
+   stdin_readable_cb (struct ev_loop *loop, struct ev_io *w, int revents)
+   {
+      ev_io_stop (loop, w);
+     .. read from stdin here (or from w->fd) and haqndle any I/O errors
+   }
 
-  ...
-  struct ev_loop *loop = ev_default_init (0);
-  struct ev_io stdin_readable;
-  ev_io_init (&stdin_readable, stdin_readable_cb, STDIN_FILENO, EV_READ);
-  ev_io_start (loop, &stdin_readable);
-  ev_loop (loop, 0);
+   ...
+   struct ev_loop *loop = ev_default_init (0);
+   struct ev_io stdin_readable;
+   ev_io_init (&stdin_readable, stdin_readable_cb, STDIN_FILENO, EV_READ);
+   ev_io_start (loop, &stdin_readable);
+   ev_loop (loop, 0);
 
 
 =head2 C<ev_timer> - relative and optionally repeating timeouts
@@ -1185,7 +1185,7 @@ Timer watchers are simple relative timers that generate an event after a
 given time, and optionally repeating in regular intervals after that.
 
 The timers are based on real time, that is, if you register an event that
-times out after an hour and you reset your system clock to january last
+times out after an hour and you reset your system clock to January last
 year, it will still time out after (roughly) and hour. "Roughly" because
 detecting time jumps is hard, and some inaccuracies are unavoidable (the
 monotonic clock option helps a lot here).
@@ -1198,7 +1198,7 @@ on the current time, use something like this to adjust for this:
 
    ev_timer_set (&timer, after + ev_now () - ev_time (), 0.);
 
-The callback is guarenteed to be invoked only after its timeout has passed,
+The callback is guaranteed to be invoked only after its timeout has passed,
 but if multiple timers become ready during the same loop iteration then
 order of execution is undefined.
 
@@ -1229,13 +1229,13 @@ repeating. The exact semantics are:
 
 If the timer is pending, its pending status is cleared.
 
-If the timer is started but nonrepeating, stop it (as if it timed out).
+If the timer is started but non-repeating, stop it (as if it timed out).
 
 If the timer is repeating, either start it if necessary (with the
 C<repeat> value), or reset the running timer to the C<repeat> value.
 
 This sounds a bit complicated, but here is a useful and typical
-example: Imagine you have a tcp connection and you want a so-called idle
+example: Imagine you have a TCP connection and you want a so-called idle
 timeout, that is, you want to be called when there have been, say, 60
 seconds of inactivity on the socket. The easiest way to do this is to
 configure an C<ev_timer> with a C<repeat> value of C<60> and then call
@@ -1271,33 +1271,33 @@ which is also when any modifications are taken into account.
 
 Example: Create a timer that fires after 60 seconds.
 
-  static void
-  one_minute_cb (struct ev_loop *loop, struct ev_timer *w, int revents)
-  {
-    .. one minute over, w is actually stopped right here
-  }
+   static void
+   one_minute_cb (struct ev_loop *loop, struct ev_timer *w, int revents)
+   {
+     .. one minute over, w is actually stopped right here
+   }
 
-  struct ev_timer mytimer;
-  ev_timer_init (&mytimer, one_minute_cb, 60., 0.);
-  ev_timer_start (loop, &mytimer);
+   struct ev_timer mytimer;
+   ev_timer_init (&mytimer, one_minute_cb, 60., 0.);
+   ev_timer_start (loop, &mytimer);
 
 Example: Create a timeout timer that times out after 10 seconds of
 inactivity.
 
-  static void
-  timeout_cb (struct ev_loop *loop, struct ev_timer *w, int revents)
-  {
-    .. ten seconds without any activity
-  }
+   static void
+   timeout_cb (struct ev_loop *loop, struct ev_timer *w, int revents)
+   {
+     .. ten seconds without any activity
+   }
 
-  struct ev_timer mytimer;
-  ev_timer_init (&mytimer, timeout_cb, 0., 10.); /* note, only repeat used */
-  ev_timer_again (&mytimer); /* start timer */
-  ev_loop (loop, 0);
+   struct ev_timer mytimer;
+   ev_timer_init (&mytimer, timeout_cb, 0., 10.); /* note, only repeat used */
+   ev_timer_again (&mytimer); /* start timer */
+   ev_loop (loop, 0);
 
-  // and in some piece of code that gets executed on any "activity":
-  // reset the timeout to start ticking again at 10 seconds
-  ev_timer_again (&mytimer);
+   // and in some piece of code that gets executed on any "activity":
+   // reset the timeout to start ticking again at 10 seconds
+   ev_timer_again (&mytimer);
 
 
 =head2 C<ev_periodic> - to cron or not to cron?
@@ -1306,11 +1306,11 @@ Periodic watchers are also timers of a kind, but they are very versatile
 (and unfortunately a bit complex).
 
 Unlike C<ev_timer>'s, they are not based on real time (or relative time)
-but on wallclock time (absolute time). You can tell a periodic watcher
+but on wall clock time (absolute time). You can tell a periodic watcher
 to trigger after some specific point in time. For example, if you tell a
-periodic watcher to trigger in 10 seconds (by specifiying e.g. C<ev_now ()
+periodic watcher to trigger in 10 seconds (by specifying e.g. C<ev_now ()
 + 10.>, that is, an absolute time not a delay) and then reset your system
-clock to january of the previous year, then it will take more than year
+clock to January of the previous year, then it will take more than year
 to trigger the event (unlike an C<ev_timer>, which would still trigger
 roughly 10 seconds later as it uses a relative timeout).
 
@@ -1318,7 +1318,7 @@ C<ev_periodic>s can also be used to implement vastly more complex timers,
 such as triggering an event on each "midnight, local time", or other
 complicated, rules.
 
-As with timers, the callback is guarenteed to be invoked only when the
+As with timers, the callback is guaranteed to be invoked only when the
 time (C<at>) has passed, but if multiple periodic timers become ready
 during the same loop iteration then order of execution is undefined.
 
@@ -1337,7 +1337,7 @@ operation, and we will explain them from simplest to complex:
 
 =item * absolute timer (at = time, interval = reschedule_cb = 0)
 
-In this configuration the watcher triggers an event after the wallclock
+In this configuration the watcher triggers an event after the wall clock
 time C<at> has passed and doesn't repeat. It will not adjust when a time
 jump occurs, that is, if it is to be run at January 1st 2011 then it will
 run when the system time reaches or surpasses this time.
@@ -1355,7 +1355,7 @@ the hour:
    ev_periodic_set (&periodic, 0., 3600., 0);
 
 This doesn't mean there will always be 3600 seconds in between triggers,
-but only that the the callback will be called when the system time shows a
+but only that the callback will be called when the system time shows a
 full hour (UTC), or more correctly, when the system time is evenly divisible
 by 3600.
 
@@ -1367,9 +1367,9 @@ For numerical stability it is preferable that the C<at> value is near
 C<ev_now ()> (the current time), but there is no range requirement for
 this value, and in fact is often specified as zero.
 
-Note also that there is an upper limit to how often a timer can fire (cpu
+Note also that there is an upper limit to how often a timer can fire (CPU
 speed for example), so if C<interval> is very small then timing stability
-will of course detoriate. Libev itself tries to be exact to be about one
+will of course deteriorate. Libev itself tries to be exact to be about one
 millisecond (if the OS supports it and the machine is fast enough).
 
 =item * manual reschedule mode (at and interval ignored, reschedule_cb = callback)
@@ -1448,36 +1448,36 @@ the periodic timer fires or C<ev_periodic_again> is being called.
 
 Example: Call a callback every hour, or, more precisely, whenever the
 system clock is divisible by 3600. The callback invocation times have
-potentially a lot of jittering, but good long-term stability.
+potentially a lot of jitter, but good long-term stability.
 
-  static void
-  clock_cb (struct ev_loop *loop, struct ev_io *w, int revents)
-  {
-    ... its now a full hour (UTC, or TAI or whatever your clock follows)
-  }
+   static void
+   clock_cb (struct ev_loop *loop, struct ev_io *w, int revents)
+   {
+     ... its now a full hour (UTC, or TAI or whatever your clock follows)
+   }
 
-  struct ev_periodic hourly_tick;
-  ev_periodic_init (&hourly_tick, clock_cb, 0., 3600., 0);
-  ev_periodic_start (loop, &hourly_tick);
+   struct ev_periodic hourly_tick;
+   ev_periodic_init (&hourly_tick, clock_cb, 0., 3600., 0);
+   ev_periodic_start (loop, &hourly_tick);
 
 Example: The same as above, but use a reschedule callback to do it:
 
-  #include <math.h>
+   #include <math.h>
 
-  static ev_tstamp
-  my_scheduler_cb (struct ev_periodic *w, ev_tstamp now)
-  {
-    return fmod (now, 3600.) + 3600.;
-  }
+   static ev_tstamp
+   my_scheduler_cb (struct ev_periodic *w, ev_tstamp now)
+   {
+     return fmod (now, 3600.) + 3600.;
+   }
 
-  ev_periodic_init (&hourly_tick, clock_cb, 0., 0., my_scheduler_cb);
+   ev_periodic_init (&hourly_tick, clock_cb, 0., 0., my_scheduler_cb);
 
 Example: Call a callback every hour, starting now:
 
-  struct ev_periodic hourly_tick;
-  ev_periodic_init (&hourly_tick, clock_cb,
-                    fmod (ev_now (loop), 3600.), 3600., 0);
-  ev_periodic_start (loop, &hourly_tick);
+   struct ev_periodic hourly_tick;
+   ev_periodic_init (&hourly_tick, clock_cb,
+                     fmod (ev_now (loop), 3600.), 3600., 0);
+   ev_periodic_start (loop, &hourly_tick);
   
 
 =head2 C<ev_signal> - signal me when a signal gets signalled!
@@ -1495,8 +1495,8 @@ watcher for a signal is stopped libev will reset the signal handler to
 SIG_DFL (regardless of what it was set to before).
 
 If possible and supported, libev will install its handlers with
-C<SA_RESTART> behaviour enabled, so syscalls should not be unduly
-interrupted. If you have a problem with syscalls getting interrupted by
+C<SA_RESTART> behaviour enabled, so system calls should not be unduly
+interrupted. If you have a problem with system calls getting interrupted by
 signals you can block all signals in an C<ev_check> watcher and unblock
 them in an C<ev_prepare> watcher.
 
@@ -1521,15 +1521,15 @@ The signal the watcher watches out for.
 
 Example: Try to exit cleanly on SIGINT and SIGTERM.
 
-  static void
-  sigint_cb (struct ev_loop *loop, struct ev_signal *w, int revents)
-  {
-    ev_unloop (loop, EVUNLOOP_ALL);
-  }
+   static void
+   sigint_cb (struct ev_loop *loop, struct ev_signal *w, int revents)
+   {
+     ev_unloop (loop, EVUNLOOP_ALL);
+   }
 
-  struct ev_signal signal_watcher;
-  ev_signal_init (&signal_watcher, sigint_cb, SIGINT);
-  ev_signal_start (loop, &sigint_cb);
+   struct ev_signal signal_watcher;
+   ev_signal_init (&signal_watcher, sigint_cb, SIGINT);
+   ev_signal_start (loop, &sigint_cb);
 
 
 =head2 C<ev_child> - watch out for process status changes
@@ -1541,13 +1541,13 @@ forked (which implies it might have already exited), as long as the event
 loop isn't entered (or is continued from a watcher).
 
 Only the default event loop is capable of handling signals, and therefore
-you can only rgeister child watchers in the default event loop.
+you can only register child watchers in the default event loop.
 
 =head3 Process Interaction
 
 Libev grabs C<SIGCHLD> as soon as the default event loop is
 initialised. This is necessary to guarantee proper behaviour even if
-the first child watcher is started after the child exits. The occurance
+the first child watcher is started after the child exits. The occurrence
 of C<SIGCHLD> is recorded asynchronously, but child reaping is done
 synchronously as part of the event loop processing. Libev always reaps all
 children, even ones not watched.
@@ -1599,34 +1599,34 @@ C<waitpid> and C<sys/wait.h> documentation for details).
 Example: C<fork()> a new process and install a child handler to wait for
 its completion.
 
-  ev_child cw;
+   ev_child cw;
 
-  static void
-  child_cb (EV_P_ struct ev_child *w, int revents)
-  {
-    ev_child_stop (EV_A_ w);
-    printf ("process %d exited with status %x\n", w->rpid, w->rstatus);
-  }
+   static void
+   child_cb (EV_P_ struct ev_child *w, int revents)
+   {
+     ev_child_stop (EV_A_ w);
+     printf ("process %d exited with status %x\n", w->rpid, w->rstatus);
+   }
 
-  pid_t pid = fork ();
+   pid_t pid = fork ();
 
-  if (pid < 0)
-    // error
-  else if (pid == 0)
-    {
-      // the forked child executes here
-      exit (1);
-    }
-  else
-    {
-      ev_child_init (&cw, child_cb, pid, 0);
-      ev_child_start (EV_DEFAULT_ &cw);
-    }
+   if (pid < 0)
+     // error
+   else if (pid == 0)
+     {
+       // the forked child executes here
+       exit (1);
+     }
+   else
+     {
+       ev_child_init (&cw, child_cb, pid, 0);
+       ev_child_start (EV_DEFAULT_ &cw);
+     }
 
 
 =head2 C<ev_stat> - did the file attributes just change?
 
-This watches a filesystem path for attribute changes. That is, it calls
+This watches a file system path for attribute changes. That is, it calls
 C<stat> regularly (or when the OS says it changed) and sees if it changed
 compared to the last time, invoking the callback if it did.
 
@@ -1670,7 +1670,7 @@ structure. When using the library from programs that change the ABI to
 use 64 bit file offsets the programs will fail. In that case you have to
 compile libev with the same flags to get binary compatibility. This is
 obviously the case with any flags that change the ABI, but the problem is
-most noticably with ev_stat and largefile support.
+most noticeably with ev_stat and large file support.
 
 =head3 Inotify
 
@@ -1690,8 +1690,8 @@ descriptor open on the object at all times).
 
 =head3 The special problem of stat time resolution
 
-The C<stat ()> syscall only supports full-second resolution portably, and
-even on systems where the resolution is higher, many filesystems still
+The C<stat ()> system call only supports full-second resolution portably, and
+even on systems where the resolution is higher, many file systems still
 only support whole seconds.
 
 That means that, if the time is the only thing that changes, you can
@@ -1761,7 +1761,7 @@ The specified interval.
 
 =item const char *path [read-only]
 
-The filesystem path that is being watched.
+The file system path that is being watched.
 
 =back
 
@@ -1769,55 +1769,55 @@ The filesystem path that is being watched.
 
 Example: Watch C</etc/passwd> for attribute changes.
 
-  static void
-  passwd_cb (struct ev_loop *loop, ev_stat *w, int revents)
-  {
-    /* /etc/passwd changed in some way */
-    if (w->attr.st_nlink)
-      {
-        printf ("passwd current size  %ld\n", (long)w->attr.st_size);
-        printf ("passwd current atime %ld\n", (long)w->attr.st_mtime);
-        printf ("passwd current mtime %ld\n", (long)w->attr.st_mtime);
-      }
-    else
-      /* you shalt not abuse printf for puts */
-      puts ("wow, /etc/passwd is not there, expect problems. "
-            "if this is windows, they already arrived\n");
-  }
+   static void
+   passwd_cb (struct ev_loop *loop, ev_stat *w, int revents)
+   {
+     /* /etc/passwd changed in some way */
+     if (w->attr.st_nlink)
+       {
+         printf ("passwd current size  %ld\n", (long)w->attr.st_size);
+         printf ("passwd current atime %ld\n", (long)w->attr.st_mtime);
+         printf ("passwd current mtime %ld\n", (long)w->attr.st_mtime);
+       }
+     else
+       /* you shalt not abuse printf for puts */
+       puts ("wow, /etc/passwd is not there, expect problems. "
+             "if this is windows, they already arrived\n");
+   }
 
-  ...
-  ev_stat passwd;
+   ...
+   ev_stat passwd;
 
-  ev_stat_init (&passwd, passwd_cb, "/etc/passwd", 0.);
-  ev_stat_start (loop, &passwd);
+   ev_stat_init (&passwd, passwd_cb, "/etc/passwd", 0.);
+   ev_stat_start (loop, &passwd);
 
 Example: Like above, but additionally use a one-second delay so we do not
 miss updates (however, frequent updates will delay processing, too, so
 one might do the work both on C<ev_stat> callback invocation I<and> on
 C<ev_timer> callback invocation).
 
-  static ev_stat passwd;
-  static ev_timer timer;
+   static ev_stat passwd;
+   static ev_timer timer;
 
-  static void
-  timer_cb (EV_P_ ev_timer *w, int revents)
-  {
-    ev_timer_stop (EV_A_ w);
+   static void
+   timer_cb (EV_P_ ev_timer *w, int revents)
+   {
+     ev_timer_stop (EV_A_ w);
 
-    /* now it's one second after the most recent passwd change */
-  }
+     /* now it's one second after the most recent passwd change */
+   }
 
-  static void
-  stat_cb (EV_P_ ev_stat *w, int revents)
-  {
-    /* reset the one-second timer */
-    ev_timer_again (EV_A_ &timer);
-  }
+   static void
+   stat_cb (EV_P_ ev_stat *w, int revents)
+   {
+     /* reset the one-second timer */
+     ev_timer_again (EV_A_ &timer);
+   }
 
-  ...
-  ev_stat_init (&passwd, stat_cb, "/etc/passwd", 0.);
-  ev_stat_start (loop, &passwd);
-  ev_timer_init (&timer, timer_cb, 0., 1.02);
+   ...
+   ev_stat_init (&passwd, stat_cb, "/etc/passwd", 0.);
+   ev_stat_start (loop, &passwd);
+   ev_timer_init (&timer, timer_cb, 0., 1.02);
 
 
 =head2 C<ev_idle> - when you've got nothing better to do...
@@ -1858,17 +1858,17 @@ believe me.
 Example: Dynamically allocate an C<ev_idle> watcher, start it, and in the
 callback, free it. Also, use no error checking, as usual.
 
-  static void
-  idle_cb (struct ev_loop *loop, struct ev_idle *w, int revents)
-  {
-    free (w);
-    // now do something you wanted to do when the program has
-    // no longer anything immediate to do.
-  }
+   static void
+   idle_cb (struct ev_loop *loop, struct ev_idle *w, int revents)
+   {
+     free (w);
+     // now do something you wanted to do when the program has
+     // no longer anything immediate to do.
+   }
 
-  struct ev_idle *idle_watcher = malloc (sizeof (struct ev_idle));
-  ev_idle_init (idle_watcher, idle_cb);
-  ev_idle_start (loop, idle_cb);
+   struct ev_idle *idle_watcher = malloc (sizeof (struct ev_idle));
+   ev_idle_init (idle_watcher, idle_cb);
+   ev_idle_start (loop, idle_cb);
 
 
 =head2 C<ev_prepare> and C<ev_check> - customise your event loop!
@@ -1897,7 +1897,7 @@ This is done by examining in each prepare call which file descriptors need
 to be watched by the other library, registering C<ev_io> watchers for
 them and starting an C<ev_timer> watcher for any timeouts (many libraries
 provide just this functionality). Then, in the check watcher you check for
-any events that occured (by checking the pending status of all watchers
+any events that occurred (by checking the pending status of all watchers
 and stopping them) and call back into the library. The I/O and timer
 callbacks will never actually be called (but must be valid nevertheless,
 because you never know, you know?).
@@ -1950,119 +1950,119 @@ is pseudo-code only of course. This requires you to either use a low
 priority for the check watcher or use C<ev_clear_pending> explicitly, as
 the callbacks for the IO/timeout watchers might not have been called yet.
 
-  static ev_io iow [nfd];
-  static ev_timer tw;
+   static ev_io iow [nfd];
+   static ev_timer tw;
 
-  static void
-  io_cb (ev_loop *loop, ev_io *w, int revents)
-  {
-  }
+   static void
+   io_cb (ev_loop *loop, ev_io *w, int revents)
+   {
+   }
 
-  // create io watchers for each fd and a timer before blocking
-  static void
-  adns_prepare_cb (ev_loop *loop, ev_prepare *w, int revents)
-  {
-    int timeout = 3600000;
-    struct pollfd fds [nfd];
-    // actual code will need to loop here and realloc etc.
-    adns_beforepoll (ads, fds, &nfd, &timeout, timeval_from (ev_time ()));
+   // create io watchers for each fd and a timer before blocking
+   static void
+   adns_prepare_cb (ev_loop *loop, ev_prepare *w, int revents)
+   {
+     int timeout = 3600000;
+     struct pollfd fds [nfd];
+     // actual code will need to loop here and realloc etc.
+     adns_beforepoll (ads, fds, &nfd, &timeout, timeval_from (ev_time ()));
 
-    /* the callback is illegal, but won't be called as we stop during check */
-    ev_timer_init (&tw, 0, timeout * 1e-3);
-    ev_timer_start (loop, &tw);
+     /* the callback is illegal, but won't be called as we stop during check */
+     ev_timer_init (&tw, 0, timeout * 1e-3);
+     ev_timer_start (loop, &tw);
 
-    // create one ev_io per pollfd
-    for (int i = 0; i < nfd; ++i)
-      {
-        ev_io_init (iow + i, io_cb, fds [i].fd,
-          ((fds [i].events & POLLIN ? EV_READ : 0)
-           | (fds [i].events & POLLOUT ? EV_WRITE : 0)));
+     // create one ev_io per pollfd
+     for (int i = 0; i < nfd; ++i)
+       {
+         ev_io_init (iow + i, io_cb, fds [i].fd,
+           ((fds [i].events & POLLIN ? EV_READ : 0)
+            | (fds [i].events & POLLOUT ? EV_WRITE : 0)));
 
-        fds [i].revents = 0;
-        ev_io_start (loop, iow + i);
-      }
-  }
+         fds [i].revents = 0;
+         ev_io_start (loop, iow + i);
+       }
+   }
 
-  // stop all watchers after blocking
-  static void
-  adns_check_cb (ev_loop *loop, ev_check *w, int revents)
-  {
-    ev_timer_stop (loop, &tw);
+   // stop all watchers after blocking
+   static void
+   adns_check_cb (ev_loop *loop, ev_check *w, int revents)
+   {
+     ev_timer_stop (loop, &tw);
 
-    for (int i = 0; i < nfd; ++i)
-      {
-        // set the relevant poll flags
-        // could also call adns_processreadable etc. here
-        struct pollfd *fd = fds + i;
-        int revents = ev_clear_pending (iow + i);
-        if (revents & EV_READ ) fd->revents |= fd->events & POLLIN;
-        if (revents & EV_WRITE) fd->revents |= fd->events & POLLOUT;
+     for (int i = 0; i < nfd; ++i)
+       {
+         // set the relevant poll flags
+         // could also call adns_processreadable etc. here
+         struct pollfd *fd = fds + i;
+         int revents = ev_clear_pending (iow + i);
+         if (revents & EV_READ ) fd->revents |= fd->events & POLLIN;
+         if (revents & EV_WRITE) fd->revents |= fd->events & POLLOUT;
 
-        // now stop the watcher
-        ev_io_stop (loop, iow + i);
-      }
+         // now stop the watcher
+         ev_io_stop (loop, iow + i);
+       }
 
-    adns_afterpoll (adns, fds, nfd, timeval_from (ev_now (loop));
-  }
+     adns_afterpoll (adns, fds, nfd, timeval_from (ev_now (loop));
+   }
 
 Method 2: This would be just like method 1, but you run C<adns_afterpoll>
 in the prepare watcher and would dispose of the check watcher.
 
 Method 3: If the module to be embedded supports explicit event
-notification (adns does), you can also make use of the actual watcher
+notification (libadns does), you can also make use of the actual watcher
 callbacks, and only destroy/create the watchers in the prepare watcher.
 
-  static void
-  timer_cb (EV_P_ ev_timer *w, int revents)
-  {
-    adns_state ads = (adns_state)w->data;
-    update_now (EV_A);
+   static void
+   timer_cb (EV_P_ ev_timer *w, int revents)
+   {
+     adns_state ads = (adns_state)w->data;
+     update_now (EV_A);
 
-    adns_processtimeouts (ads, &tv_now);
-  }
+     adns_processtimeouts (ads, &tv_now);
+   }
 
-  static void
-  io_cb (EV_P_ ev_io *w, int revents)
-  {
-    adns_state ads = (adns_state)w->data;
-    update_now (EV_A);
+   static void
+   io_cb (EV_P_ ev_io *w, int revents)
+   {
+     adns_state ads = (adns_state)w->data;
+     update_now (EV_A);
 
-    if (revents & EV_READ ) adns_processreadable  (ads, w->fd, &tv_now);
-    if (revents & EV_WRITE) adns_processwriteable (ads, w->fd, &tv_now);
-  }
+     if (revents & EV_READ ) adns_processreadable  (ads, w->fd, &tv_now);
+     if (revents & EV_WRITE) adns_processwriteable (ads, w->fd, &tv_now);
+   }
 
-  // do not ever call adns_afterpoll
+   // do not ever call adns_afterpoll
 
 Method 4: Do not use a prepare or check watcher because the module you
-want to embed is too inflexible to support it. Instead, youc na override
+want to embed is too inflexible to support it. Instead, you can override
 their poll function.  The drawback with this solution is that the main
 loop is now no longer controllable by EV. The C<Glib::EV> module does
 this.
 
-  static gint
-  event_poll_func (GPollFD *fds, guint nfds, gint timeout)
-  {
-    int got_events = 0;
+   static gint
+   event_poll_func (GPollFD *fds, guint nfds, gint timeout)
+   {
+     int got_events = 0;
 
-    for (n = 0; n < nfds; ++n)
-      // create/start io watcher that sets the relevant bits in fds[n] and increment got_events
+     for (n = 0; n < nfds; ++n)
+       // create/start io watcher that sets the relevant bits in fds[n] and increment got_events
 
-    if (timeout >= 0)
-      // create/start timer
+     if (timeout >= 0)
+       // create/start timer
 
-    // poll
-    ev_loop (EV_A_ 0);
+     // poll
+     ev_loop (EV_A_ 0);
 
-    // stop timer again
-    if (timeout >= 0)
-      ev_timer_stop (EV_A_ &to);
+     // stop timer again
+     if (timeout >= 0)
+       ev_timer_stop (EV_A_ &to);
 
-    // stop io watchers again - their callbacks should have set
-    for (n = 0; n < nfds; ++n)
-      ev_io_stop (EV_A_ iow [n]);
+     // stop io watchers again - their callbacks should have set
+     for (n = 0; n < nfds; ++n)
+       ev_io_stop (EV_A_ iow [n]);
 
-    return got_events;
-  }
+     return got_events;
+   }
 
 
 =head2 C<ev_embed> - when one backend isn't enough...
@@ -2128,13 +2128,13 @@ Configures the watcher to embed the given loop, which must be
 embeddable. If the callback is C<0>, then C<ev_embed_sweep> will be
 invoked automatically, otherwise it is the responsibility of the callback
 to invoke it (it will continue to be called until the sweep has been done,
-if you do not want thta, you need to temporarily stop the embed watcher).
+if you do not want that, you need to temporarily stop the embed watcher).
 
 =item ev_embed_sweep (loop, ev_embed *)
 
 Make a single, non-blocking sweep over the embedded loop. This works
 similarly to C<ev_loop (embedded_loop, EVLOOP_NONBLOCK)>, but in the most
-apropriate way for embedded loops.
+appropriate way for embedded loops.
 
 =item struct ev_loop *other [read-only]
 
@@ -2146,49 +2146,49 @@ The embedded event loop.
 
 Example: Try to get an embeddable event loop and embed it into the default
 event loop. If that is not possible, use the default loop. The default
-loop is stored in C<loop_hi>, while the mebeddable loop is stored in
-C<loop_lo> (which is C<loop_hi> in the acse no embeddable loop can be
+loop is stored in C<loop_hi>, while the embeddable loop is stored in
+C<loop_lo> (which is C<loop_hi> in the case no embeddable loop can be
 used).
 
-  struct ev_loop *loop_hi = ev_default_init (0);
-  struct ev_loop *loop_lo = 0;
-  struct ev_embed embed;
-  
-  // see if there is a chance of getting one that works
-  // (remember that a flags value of 0 means autodetection)
-  loop_lo = ev_embeddable_backends () & ev_recommended_backends ()
-    ? ev_loop_new (ev_embeddable_backends () & ev_recommended_backends ())
-    : 0;
+   struct ev_loop *loop_hi = ev_default_init (0);
+   struct ev_loop *loop_lo = 0;
+   struct ev_embed embed;
+   
+   // see if there is a chance of getting one that works
+   // (remember that a flags value of 0 means autodetection)
+   loop_lo = ev_embeddable_backends () & ev_recommended_backends ()
+     ? ev_loop_new (ev_embeddable_backends () & ev_recommended_backends ())
+     : 0;
 
-  // if we got one, then embed it, otherwise default to loop_hi
-  if (loop_lo)
-    {
-      ev_embed_init (&embed, 0, loop_lo);
-      ev_embed_start (loop_hi, &embed);
-    }
-  else
-    loop_lo = loop_hi;
+   // if we got one, then embed it, otherwise default to loop_hi
+   if (loop_lo)
+     {
+       ev_embed_init (&embed, 0, loop_lo);
+       ev_embed_start (loop_hi, &embed);
+     }
+   else
+     loop_lo = loop_hi;
 
 Example: Check if kqueue is available but not recommended and create
 a kqueue backend for use with sockets (which usually work with any
 kqueue implementation). Store the kqueue/socket-only event loop in
 C<loop_socket>. (One might optionally use C<EVFLAG_NOENV>, too).
 
-  struct ev_loop *loop = ev_default_init (0);
-  struct ev_loop *loop_socket = 0;
-  struct ev_embed embed;
-  
-  if (ev_supported_backends () & ~ev_recommended_backends () & EVBACKEND_KQUEUE)
-    if ((loop_socket = ev_loop_new (EVBACKEND_KQUEUE))
-      {
-        ev_embed_init (&embed, 0, loop_socket);
-        ev_embed_start (loop, &embed);
-      }
+   struct ev_loop *loop = ev_default_init (0);
+   struct ev_loop *loop_socket = 0;
+   struct ev_embed embed;
+   
+   if (ev_supported_backends () & ~ev_recommended_backends () & EVBACKEND_KQUEUE)
+     if ((loop_socket = ev_loop_new (EVBACKEND_KQUEUE))
+       {
+         ev_embed_init (&embed, 0, loop_socket);
+         ev_embed_start (loop, &embed);
+       }
 
-  if (!loop_socket)
-    loop_socket = loop;
+   if (!loop_socket)
+     loop_socket = loop;
 
-  // now use loop_socket for all sockets, and loop for everything else
+   // now use loop_socket for all sockets, and loop for everything else
 
 
 =head2 C<ev_fork> - the audacity to resume the event loop after a fork
@@ -2251,7 +2251,7 @@ queue:
 
 To implement race-free queueing, you simply add to the queue in the signal
 handler but you block the signal handler in the watcher callback. Here is an example that does that for
-some fictitiuous SIGUSR1 handler:
+some fictitious SIGUSR1 handler:
 
    static ev_async mysig;
 
@@ -2335,11 +2335,11 @@ believe me.
 Sends/signals/activates the given C<ev_async> watcher, that is, feeds
 an C<EV_ASYNC> event on the watcher into the event loop. Unlike
 C<ev_feed_event>, this call is safe to do in other threads, signal or
-similar contexts (see the dicusssion of C<EV_ATOMIC_T> in the embedding
+similar contexts (see the discussion of C<EV_ATOMIC_T> in the embedding
 section below on what exactly this means).
 
-This call incurs the overhead of a syscall only once per loop iteration,
-so while the overhead might be noticable, it doesn't apply to repeated
+This call incurs the overhead of a system call only once per loop iteration,
+so while the overhead might be noticeable, it doesn't apply to repeated
 calls to C<ev_async_send>.
 
 =item bool = ev_async_pending (ev_async *)
@@ -2351,10 +2351,10 @@ event loop.
 C<ev_async_send> sets a flag in the watcher and wakes up the loop. When
 the loop iterates next and checks for the watcher to have become active,
 it will reset the flag again. C<ev_async_pending> can be used to very
-quickly check wether invoking the loop might be a good idea.
+quickly check whether invoking the loop might be a good idea.
 
-Not that this does I<not> check wether the watcher itself is pending, only
-wether it has been requested to make this watcher pending.
+Not that this does I<not> check whether the watcher itself is pending, only
+whether it has been requested to make this watcher pending.
 
 =back
 
@@ -2375,7 +2375,7 @@ more watchers yourself.
 
 If C<fd> is less than 0, then no I/O watcher will be started and events
 is being ignored. Otherwise, an C<ev_io> watcher for the given C<fd> and
-C<events> set will be craeted and started.
+C<events> set will be created and started.
 
 If C<timeout> is less than 0, then no timeout watcher will be
 started. Otherwise an C<ev_timer> watcher with after = C<timeout> (and
@@ -2387,15 +2387,15 @@ passed an C<revents> set like normal event callbacks (a combination of
 C<EV_ERROR>, C<EV_READ>, C<EV_WRITE> or C<EV_TIMEOUT>) and the C<arg>
 value passed to C<ev_once>:
 
-  static void stdin_ready (int revents, void *arg)
-  {
-    if (revents & EV_TIMEOUT)
-      /* doh, nothing entered */;
-    else if (revents & EV_READ)
-      /* stdin might have data for us, joy! */;
-  }
+   static void stdin_ready (int revents, void *arg)
+   {
+     if (revents & EV_TIMEOUT)
+       /* doh, nothing entered */;
+     else if (revents & EV_READ)
+       /* stdin might have data for us, joy! */;
+   }
 
-  ev_once (STDIN_FILENO, EV_READ, 10., stdin_ready, 0);
+   ev_once (STDIN_FILENO, EV_READ, 10., stdin_ready, 0);
 
 =item ev_feed_event (ev_loop *, watcher *, int revents)
 
@@ -2410,7 +2410,7 @@ the given events it.
 
 =item ev_feed_signal_event (ev_loop *loop, int signum)
 
-Feed an event as if the given signal occured (C<loop> must be the default
+Feed an event as if the given signal occurred (C<loop> must be the default
 loop!).
 
 =back
@@ -2449,12 +2449,12 @@ to use the libev header file and library.
 =head1 C++ SUPPORT
 
 Libev comes with some simplistic wrapper classes for C++ that mainly allow
-you to use some convinience methods to start/stop watchers and also change
+you to use some convenience methods to start/stop watchers and also change
 the callback model to a model using method callbacks on objects.
 
 To use it,
    
-  #include <ev++.h>
+   #include <ev++.h>
 
 This automatically includes F<ev.h> and puts all of its definitions (many
 of them macros) into the global namespace. All C++ specific things are
@@ -2531,14 +2531,14 @@ thunking function, making it as fast as a direct C callback.
 
 Example: simple class declaration and watcher initialisation
 
-  struct myclass
-  {
-    void io_cb (ev::io &w, int revents) { }
-  }
+   struct myclass
+   {
+     void io_cb (ev::io &w, int revents) { }
+   }
 
-  myclass obj;
-  ev::io iow;
-  iow.set <myclass, &myclass::io_cb> (&obj);
+   myclass obj;
+   ev::io iow;
+   iow.set <myclass, &myclass::io_cb> (&obj);
 
 =item w->set<function> (void *data = 0)
 
@@ -2552,17 +2552,17 @@ See the method-C<set> above for more details.
 
 Example:
 
-  static void io_cb (ev::io &w, int revents) { }
-  iow.set <io_cb> ();
+   static void io_cb (ev::io &w, int revents) { }
+   iow.set <io_cb> ();
 
 =item w->set (struct ev_loop *)
 
 Associates a different C<struct ev_loop> with this watcher. You can only
 do this when the watcher is inactive (and not pending either).
 
-=item w->set ([args])
+=item w->set ([arguments])
 
-Basically the same as C<ev_TYPE_set>, with the same args. Must be
+Basically the same as C<ev_TYPE_set>, with the same arguments. Must be
 called at least once. Unlike the C counterpart, an active watcher gets
 automatically stopped and restarted when reconfiguring it with this
 method.
@@ -2596,25 +2596,25 @@ Invokes C<ev_stat_stat>.
 Example: Define a class with an IO and idle watcher, start one of them in
 the constructor.
 
-  class myclass
-  {
-    ev::io   io;  void io_cb   (ev::io   &w, int revents);
-    ev:idle idle  void idle_cb (ev::idle &w, int revents);
+   class myclass
+   {
+     ev::io   io;  void io_cb   (ev::io   &w, int revents);
+     ev:idle idle  void idle_cb (ev::idle &w, int revents);
 
-    myclass (int fd)
-    {
-      io  .set <myclass, &myclass::io_cb  > (this);
-      idle.set <myclass, &myclass::idle_cb> (this);
+     myclass (int fd)
+     {
+       io  .set <myclass, &myclass::io_cb  > (this);
+       idle.set <myclass, &myclass::idle_cb> (this);
 
-      io.start (fd, ev::READ);
-    }
-  };
+       io.start (fd, ev::READ);
+     }
+   };
 
 
 =head1 OTHER LANGUAGE BINDINGS
 
 Libev does not offer other language bindings itself, but bindings for a
-numbe rof languages exist in the form of third-party packages. If you know
+number of languages exist in the form of third-party packages. If you know
 any interesting language binding in addition to the ones listed here, drop
 me a note.
 
@@ -2628,13 +2628,22 @@ there are additional modules that implement libev-compatible interfaces
 to C<libadns> (C<EV::ADNS>), C<Net::SNMP> (C<Net::SNMP::EV>) and the
 C<libglib> event core (C<Glib::EV> and C<EV::Glib>).
 
-It can be found and installed via CPAN, its homepage is found at
+It can be found and installed via CPAN, its homepage is at
 L<http://software.schmorp.de/pkg/EV>.
+
+=item Python
+
+Python bindings can be found at L<http://code.google.com/p/pyev/>. It
+seems to be quite complete and well-documented. Note, however, that the
+patch they require for libev is outright dangerous as it breaks the ABI
+for everybody else, and therefore, should never be applied in an installed
+libev (if python requires an incompatible ABI then it needs to embed
+libev).
 
 =item Ruby
 
 Tony Arcieri has written a ruby extension that offers access to a subset
-of the libev API and adds filehandle abstractions, asynchronous DNS and
+of the libev API and adds file handle abstractions, asynchronous DNS and
 more on top of it. It can be found via gem servers. Its homepage is at
 L<http://rev.rubyforge.org/>.
 
@@ -2648,7 +2657,7 @@ be found at L<http://git.llucax.com.ar/?p=software/ev.d.git;a=summary>.
 
 =head1 MACRO MAGIC
 
-Libev can be compiled with a variety of options, the most fundamantal
+Libev can be compiled with a variety of options, the most fundamental
 of which is C<EV_MULTIPLICITY>. This option determines whether (most)
 functions and callbacks have an initial C<struct ev_loop *> argument.
 
@@ -2663,9 +2672,9 @@ This provides the loop I<argument> for functions, if one is required ("ev
 loop argument"). The C<EV_A> form is used when this is the sole argument,
 C<EV_A_> is used when other arguments are following. Example:
 
-  ev_unref (EV_A);
-  ev_timer_add (EV_A_ watcher);
-  ev_loop (EV_A_ 0);
+   ev_unref (EV_A);
+   ev_timer_add (EV_A_ watcher);
+   ev_loop (EV_A_ 0);
 
 It assumes the variable C<loop> of type C<struct ev_loop *> is in scope,
 which is often provided by the following macro.
@@ -2676,11 +2685,11 @@ This provides the loop I<parameter> for functions, if one is required ("ev
 loop parameter"). The C<EV_P> form is used when this is the sole parameter,
 C<EV_P_> is used when other parameters are following. Example:
 
-  // this is how ev_unref is being declared
-  static void ev_unref (EV_P);
+   // this is how ev_unref is being declared
+   static void ev_unref (EV_P);
 
-  // this is how you can declare your typical callback
-  static void cb (EV_P_ ev_timer *w, int revents)
+   // this is how you can declare your typical callback
+   static void cb (EV_P_ ev_timer *w, int revents)
 
 It declares a parameter C<loop> of type C<struct ev_loop *>, quite
 suitable for use with C<EV_A>.
@@ -2706,16 +2715,16 @@ Example: Declare and initialise a check watcher, utilising the above
 macros so it will work regardless of whether multiple loops are supported
 or not.
 
-  static void
-  check_cb (EV_P_ ev_timer *w, int revents)
-  {
-    ev_check_stop (EV_A_ w);
-  }
+   static void
+   check_cb (EV_P_ ev_timer *w, int revents)
+   {
+     ev_check_stop (EV_A_ w);
+   }
 
-  ev_check check;
-  ev_check_init (&check, check_cb);
-  ev_check_start (EV_DEFAULT_ &check);
-  ev_loop (EV_DEFAULT_ 0);
+   ev_check check;
+   ev_check_init (&check, check_cb);
+   ev_check_start (EV_DEFAULT_ &check);
+   ev_loop (EV_DEFAULT_ 0);
 
 =head1 EMBEDDING
 
@@ -2732,15 +2741,15 @@ libev somewhere in your source tree).
 =head2 FILESETS
 
 Depending on what features you need you need to include one or more sets of files
-in your app.
+in your application.
 
 =head3 CORE EVENT LOOP
 
 To include only the libev core (all the C<ev_*> functions), with manual
 configuration (no autoconf):
 
-  #define EV_STANDALONE 1
-  #include "ev.c"
+   #define EV_STANDALONE 1
+   #include "ev.c"
 
 This will automatically include F<ev.h>, too, and should be done in a
 single C source file only to provide the function implementations. To use
@@ -2748,8 +2757,8 @@ it, do the same for F<ev.h> in all files wishing to use this API (best
 done by writing a wrapper around F<ev.h> that you can include instead and
 where you can put other configuration options):
 
-  #define EV_STANDALONE 1
-  #include "ev.h"
+   #define EV_STANDALONE 1
+   #include "ev.h"
 
 Both header files and implementation files can be compiled with a C++
 compiler (at least, thats a stated goal, and breakage will be treated
@@ -2758,18 +2767,18 @@ as a bug).
 You need the following files in your source tree, or in a directory
 in your include path (e.g. in libev/ when using -Ilibev):
 
-  ev.h
-  ev.c
-  ev_vars.h
-  ev_wrap.h
+   ev.h
+   ev.c
+   ev_vars.h
+   ev_wrap.h
 
-  ev_win32.c      required on win32 platforms only
+   ev_win32.c      required on win32 platforms only
 
-  ev_select.c     only when select backend is enabled (which is enabled by default)
-  ev_poll.c       only when poll backend is enabled (disabled by default)
-  ev_epoll.c      only when the epoll backend is enabled (disabled by default)
-  ev_kqueue.c     only when the kqueue backend is enabled (disabled by default)
-  ev_port.c       only when the solaris port backend is enabled (disabled by default)
+   ev_select.c     only when select backend is enabled (which is enabled by default)
+   ev_poll.c       only when poll backend is enabled (disabled by default)
+   ev_epoll.c      only when the epoll backend is enabled (disabled by default)
+   ev_kqueue.c     only when the kqueue backend is enabled (disabled by default)
+   ev_port.c       only when the solaris port backend is enabled (disabled by default)
 
 F<ev.c> includes the backend files directly when enabled, so you only need
 to compile this single file.
@@ -2778,34 +2787,34 @@ to compile this single file.
 
 To include the libevent compatibility API, also include:
 
-  #include "event.c"
+   #include "event.c"
 
 in the file including F<ev.c>, and:
 
-  #include "event.h"
+   #include "event.h"
 
 in the files that want to use the libevent API. This also includes F<ev.h>.
 
 You need the following additional files for this:
 
-  event.h
-  event.c
+   event.h
+   event.c
 
 =head3 AUTOCONF SUPPORT
 
-Instead of using C<EV_STANDALONE=1> and providing your config in
+Instead of using C<EV_STANDALONE=1> and providing your configuration in
 whatever way you want, you can also C<m4_include([libev.m4])> in your
 F<configure.ac> and leave C<EV_STANDALONE> undefined. F<ev.c> will then
 include F<config.h> and configure itself accordingly.
 
 For this of course you need the m4 file:
 
-  libev.m4
+   libev.m4
 
 =head2 PREPROCESSOR SYMBOLS/MACROS
 
 Libev can be configured via a variety of preprocessor symbols you have to
-define before including any of its files. The default in the absense of
+define before including any of its files. The default in the absence of
 autoconf is noted for every option.
 
 =over 4
@@ -2821,7 +2830,7 @@ F<event.h> that are not directly supported by the libev core alone.
 =item EV_USE_MONOTONIC
 
 If defined to be C<1>, libev will try to detect the availability of the
-monotonic clock option at both compiletime and runtime. Otherwise no use
+monotonic clock option at both compile time and runtime. Otherwise no use
 of the monotonic clock option will be attempted. If you enable this, you
 usually have to link against librt or something similar. Enabling it when
 the functionality isn't available is safe, though, although you have
@@ -2831,8 +2840,8 @@ function is hiding in (often F<-lrt>).
 =item EV_USE_REALTIME
 
 If defined to be C<1>, libev will try to detect the availability of the
-realtime clock option at compiletime (and assume its availability at
-runtime if successful). Otherwise no use of the realtime clock option will
+real-time clock option at compile time (and assume its availability at
+runtime if successful). Otherwise no use of the real-time clock option will
 be attempted. This effectively replaces C<gettimeofday> by C<clock_get
 (CLOCK_REALTIME, ...)> and will not normally affect correctness. See the
 note about libraries in the description of C<EV_USE_MONOTONIC>, though.
@@ -2853,7 +2862,7 @@ If undefined, it will be enabled if the headers indicate GNU/Linux + Glibc
 =item EV_USE_SELECT
 
 If undefined or defined to be C<1>, libev will compile in support for the
-C<select>(2) backend. No attempt at autodetection will be done: if no
+C<select>(2) backend. No attempt at auto-detection will be done: if no
 other method takes over, select will be it. Otherwise the select backend
 will not be compiled in.
 
@@ -2861,7 +2870,7 @@ will not be compiled in.
 
 If defined to C<1>, then the select backend will use the system C<fd_set>
 structure. This is useful if libev doesn't compile due to a missing
-C<NFDBITS> or C<fd_mask> definition or it misguesses the bitset layout on
+C<NFDBITS> or C<fd_mask> definition or it mis-guesses the bitset layout on
 exotic systems. This usually limits the range of file descriptors to some
 low limit such as 1024 or might have other limitations (winsocket only
 allows 64 sockets). The C<FD_SETSIZE> macro, set before compilation, might
@@ -2920,7 +2929,7 @@ backend for Solaris 10 systems.
 
 =item EV_USE_DEVPOLL
 
-reserved for future expansion, works like the USE symbols above.
+Reserved for future expansion, works like the USE symbols above.
 
 =item EV_USE_INOTIFY
 
@@ -2937,7 +2946,7 @@ type is easily found in the C language, so you can provide your own type
 that you know is safe for your purposes. It is used both for signal handler "locking"
 as well as for signal and thread safety in C<ev_async> watchers.
 
-In the absense of this define, libev will use C<sig_atomic_t volatile>
+In the absence of this define, libev will use C<sig_atomic_t volatile>
 (from F<signal.h>), which is usually good enough on most platforms.
 
 =item EV_H
@@ -2986,8 +2995,8 @@ all the priorities, so having many of them (hundreds) uses a lot of space
 and time, so using the defaults of five priorities (-2 .. +2) is usually
 fine.
 
-If your embedding app does not need any priorities, defining these both to
-C<0> will save some memory and cpu.
+If your embedding application does not need any priorities, defining these both to
+C<0> will save some memory and CPU.
 
 =item EV_PERIODIC_ENABLE
 
@@ -3025,7 +3034,7 @@ defined to be C<0>, then they are not.
 
 If you need to shave off some kilobytes of code at the expense of some
 speed, define this symbol to C<1>. Currently this is used to override some
-inlining decisions, saves roughly 30% codesize of amd64. It also selects a
+inlining decisions, saves roughly 30% code size on amd64. It also selects a
 much smaller 2-heap for timer management over the default 4-heap.
 
 =item EV_PID_HASHSIZE
@@ -3048,7 +3057,7 @@ two).
 Heaps are not very cache-efficient. To improve the cache-efficiency of the
 timer and periodics heap, libev uses a 4-heap when this symbol is defined
 to C<1>. The 4-heap uses more complicated (longer) code but has
-noticably faster performance with many (thousands) of watchers.
+noticeably faster performance with many (thousands) of watchers.
 
 The default is C<1> unless C<EV_MINIMAL> is set in which case it is C<0>
 (disabled).
@@ -3060,7 +3069,7 @@ timer and periodics heap, libev can cache the timestamp (I<at>) within
 the heap structure (selected by defining C<EV_HEAP_CACHE_AT> to C<1>),
 which uses 8-12 bytes more per watcher and a few hundred bytes more code,
 but avoids random read accesses on heap changes. This improves performance
-noticably with with many (hundreds) of watchers.
+noticeably with with many (hundreds) of watchers.
 
 The default is C<1> unless C<EV_MINIMAL> is set in which case it is C<0>
 (disabled).
@@ -3087,9 +3096,9 @@ though, and it must be identical each time.
 
 For example, the perl EV module uses something like this:
 
-  #define EV_COMMON                       \
-    SV *self; /* contains this struct */  \
-    SV *cb_sv, *fh /* note no trailing ";" */
+   #define EV_COMMON                       \
+     SV *self; /* contains this struct */  \
+     SV *cb_sv, *fh /* note no trailing ";" */
 
 =item EV_CB_DECLARE (type)
 
@@ -3106,16 +3115,16 @@ method calls instead of plain function calls in C++.
 
 =head2 EXPORTED API SYMBOLS
 
-If you need to re-export the API (e.g. via a dll) and you need a list of
+If you need to re-export the API (e.g. via a DLL) and you need a list of
 exported symbols, you can use the provided F<Symbol.*> files which list
 all public symbols, one per line:
 
-  Symbols.ev      for libev proper
-  Symbols.event   for the libevent emulation
+   Symbols.ev      for libev proper
+   Symbols.event   for the libevent emulation
 
 This can also be used to rename all public symbols to avoid clashes with
 multiple versions of libev linked together (which is obviously bad in
-itself, but sometimes it is inconvinient to avoid this).
+itself, but sometimes it is inconvenient to avoid this).
 
 A sed command like this will create wrapper C<#define>'s that you need to
 include before including F<ev.h>:
@@ -3142,29 +3151,29 @@ file.
 The usage in rxvt-unicode is simpler. It has a F<ev_cpp.h> header file
 that everybody includes and which overrides some configure choices:
 
-  #define EV_MINIMAL 1
-  #define EV_USE_POLL 0
-  #define EV_MULTIPLICITY 0
-  #define EV_PERIODIC_ENABLE 0
-  #define EV_STAT_ENABLE 0
-  #define EV_FORK_ENABLE 0
-  #define EV_CONFIG_H <config.h>
-  #define EV_MINPRI 0
-  #define EV_MAXPRI 0
+   #define EV_MINIMAL 1
+   #define EV_USE_POLL 0
+   #define EV_MULTIPLICITY 0
+   #define EV_PERIODIC_ENABLE 0
+   #define EV_STAT_ENABLE 0
+   #define EV_FORK_ENABLE 0
+   #define EV_CONFIG_H <config.h>
+   #define EV_MINPRI 0
+   #define EV_MAXPRI 0
 
-  #include "ev++.h"
+   #include "ev++.h"
 
 And a F<ev_cpp.C> implementation file that contains libev proper and is compiled:
 
-  #include "ev_cpp.h"
-  #include "ev.c"
+   #include "ev_cpp.h"
+   #include "ev.c"
 
 
 =head1 THREADS AND COROUTINES
 
 =head2 THREADS
 
-Libev itself is completely threadsafe, but it uses no locking. This
+Libev itself is completely thread-safe, but it uses no locking. This
 means that you can use as many loops as you want in parallel, as long as
 only one thread ever calls into one libev function with the same loop
 parameter.
@@ -3181,7 +3190,7 @@ help you but by giving some generic advice:
 =over 4
 
 =item * most applications have a main thread: use the default libev loop
-in that thread, or create a seperate thread running only the default loop.
+in that thread, or create a separate thread running only the default loop.
 
 This helps integrating other libraries or software modules that use libev
 themselves and don't care/know about threading.
@@ -3192,9 +3201,9 @@ Doing this is almost never wrong, sometimes a better-performance model
 exists, but it is always a good start.
 
 =item * other models exist, such as the leader/follower pattern, where one
-loop is handed through multiple threads in a kind of round-robbin fashion.
+loop is handed through multiple threads in a kind of round-robin fashion.
 
-Chosing a model is hard - look around, learn, know that usually you cna do
+Choosing a model is hard - look around, learn, know that usually you can do
 better than you currently do :-)
 
 =item * often you need to talk to some other thread which blocks in the
@@ -3205,7 +3214,7 @@ threads safely (or from signal contexts...).
 
 =head2 COROUTINES
 
-Libev is much more accomodating to coroutines ("cooperative threads"):
+Libev is much more accommodating to coroutines ("cooperative threads"):
 libev fully supports nesting calls to it's functions from different
 coroutines (e.g. you can call C<ev_loop> on the same loop from two
 different coroutines and switch freely between both coroutines running the
@@ -3263,7 +3272,7 @@ fixed position in the storage array.
 
 A change means an I/O watcher gets started or stopped, which requires
 libev to recalculate its status (and possibly tell the kernel, depending
-on backend and wether C<ev_io_set> was used).
+on backend and whether C<ev_io_set> was used).
 
 =item Activating one watcher (putting it into the pending state): O(1)
 
@@ -3280,14 +3289,14 @@ watchers becomes O(1) w.r.t. priority handling.
 
 =item Processing signals: O(max_signal_number)
 
-Sending involves a syscall I<iff> there were no other C<ev_async_send>
+Sending involves a system call I<iff> there were no other C<ev_async_send>
 calls in the current loop iteration. Checking for async and signal events
 involves iterating over all running async watchers or all signal numbers.
 
 =back
 
 
-=head1 Win32 platform limitations and workarounds
+=head1 WIN32 PLATFORM LIMITATIONS AND WORKAROUNDS
 
 Win32 doesn't support any of the standards (e.g. POSIX) that libev
 requires, and its I/O model is fundamentally incompatible with the POSIX
@@ -3304,13 +3313,35 @@ way (note also that glib is the slowest event library known to man).
 There is no supported compilation method available on windows except
 embedding it into other applications.
 
+Not a libev limitation but worth mentioning: windows apparently doesn't
+accept large writes: instead of resulting in a partial write, windows will
+either accept everything or return C<ENOBUFS> if the buffer is too large,
+so make sure you only write small amounts into your sockets (less than a
+megabyte seems safe, but thsi apparently depends on the amount of memory
+available).
+
 Due to the many, low, and arbitrary limits on the win32 platform and
 the abysmal performance of winsockets, using a large number of sockets
 is not recommended (and not reasonable). If your program needs to use
 more than a hundred or so sockets, then likely it needs to use a totally
 different implementation for windows, as libev offers the POSIX readiness
 notification model, which cannot be implemented efficiently on windows
-(microsoft monopoly games).
+(Microsoft monopoly games).
+
+A typical way to use libev under windows is to embed it (see the embedding
+section for details) and use the following F<evwrap.h> header file instead
+of F<ev.h>:
+
+   #define EV_STANDALONE              /* keeps ev from requiring config.h */
+   #define EV_SELECT_IS_WINSOCKET 1   /* configure libev for windows select */
+
+   #include "ev.h"
+
+And compile the following F<evwrap.c> file into your project (make sure
+you do I<not> compile the F<ev.c> or any other embedded soruce files!):
+
+   #include "evwrap.h"
+   #include "ev.c"
 
 =over 4
 
@@ -3319,15 +3350,16 @@ notification model, which cannot be implemented efficiently on windows
 The winsocket C<select> function doesn't follow POSIX in that it
 requires socket I<handles> and not socket I<file descriptors> (it is
 also extremely buggy). This makes select very inefficient, and also
-requires a mapping from file descriptors to socket handles. See the
+requires a mapping from file descriptors to socket handles (the Microsoft
+C runtime provides the function C<_open_osfhandle> for this). See the
 discussion of the C<EV_SELECT_USE_FD_SET>, C<EV_SELECT_IS_WINSOCKET> and
 C<EV_FD_TO_WIN32_HANDLE> preprocessor symbols for more info.
 
-The configuration for a "naked" win32 using the microsoft runtime
+The configuration for a "naked" win32 using the Microsoft runtime
 libraries and raw winsocket select is:
 
-  #define EV_USE_SELECT 1
-  #define EV_SELECT_IS_WINSOCKET 1   /* forces EV_SELECT_USE_FD_SET, too */
+   #define EV_USE_SELECT 1
+   #define EV_SELECT_IS_WINSOCKET 1   /* forces EV_SELECT_USE_FD_SET, too */
 
 Note that winsockets handling of fd sets is O(n), so you can easily get a
 complexity in the O(n²) range when using win32.
@@ -3338,7 +3370,7 @@ Windows has numerous arbitrary (and low) limits on things.
 
 Early versions of winsocket's select only supported waiting for a maximum
 of C<64> handles (probably owning to the fact that all windows kernels
-can only wait for C<64> things at the same time internally; microsoft
+can only wait for C<64> things at the same time internally; Microsoft
 recommends spawning a chain of threads and wait for 63 handles and the
 previous thread in each. Great).
 
@@ -3347,11 +3379,11 @@ to some high number (e.g. C<2048>) before compiling the winsocket select
 call (which might be in libev or elsewhere, for example, perl does its own
 select emulation on windows).
 
-Another limit is the number of file descriptors in the microsoft runtime
+Another limit is the number of file descriptors in the Microsoft runtime
 libraries, which by default is C<64> (there must be a hidden I<64> fetish
-or something like this inside microsoft). You can increase this by calling
+or something like this inside Microsoft). You can increase this by calling
 C<_setmaxstdio>, which can increase this limit to C<2048> (another
-arbitrary limit), but is broken in many versions of the microsoft runtime
+arbitrary limit), but is broken in many versions of the Microsoft runtime
 libraries.
 
 This might get you to about C<512> or C<2048> sockets (depending on
@@ -3368,6 +3400,15 @@ In addition to a working ISO-C implementation, libev relies on a few
 additional extensions:
 
 =over 4
+
+=item C<void (*)(ev_watcher_type *, int revents)> must have compatible
+calling conventions regardless of C<ev_watcher_type *>.
+
+Libev assumes not only that all watcher pointers have the same internal
+structure (guaranteed by POSIX but not by ISO C for example), but it also
+assumes that the same (machine) code can be used to call any watcher
+callback: The watcher callbacks have different type signatures, but libev
+calls them using an C<ev_watcher *> internally.
 
 =item C<sig_atomic_t volatile> must be thread-atomic as well
 
@@ -3418,14 +3459,14 @@ scared by this.
 However, these are unavoidable for many reasons. For one, each compiler
 has different warnings, and each user has different tastes regarding
 warning options. "Warn-free" code therefore cannot be a goal except when
-targetting a specific compiler and compiler-version.
+targeting a specific compiler and compiler-version.
 
 Another reason is that some compiler warnings require elaborate
 workarounds, or other changes to the code that make it less clear and less
 maintainable.
 
 And of course, some compiler warnings are just plain stupid, or simply
-wrong (because they don't actually warn about the cindition their message
+wrong (because they don't actually warn about the condition their message
 seems to warn about).
 
 While libev is written to generate as few warnings as possible,
@@ -3447,7 +3488,7 @@ in libev, then check twice: If valgrind reports something like:
    ==2274==      possibly lost: 0 bytes in 0 blocks.
    ==2274==    still reachable: 256 bytes in 1 blocks.
 
-then there is no memory leak. Similarly, under some circumstances,
+Then there is no memory leak. Similarly, under some circumstances,
 valgrind might report kernel bugs as if it were a bug in libev, or it
 might be confused (it is a very good tool, but only a tool).
 
