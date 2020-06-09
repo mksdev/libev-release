@@ -337,7 +337,7 @@ typedef struct ev_embed
   ev_timer timer;        /* unused */
   ev_periodic periodic;  /* unused */
   ev_idle idle;          /* unused */
-  ev_fork fork;          /* unused */
+  ev_fork fork;          /* private */
 } ev_embed;
 #endif
 
@@ -456,6 +456,7 @@ void ev_loop_fork (EV_P);
 void ev_loop_verify (EV_P);
 
 ev_tstamp ev_now (EV_P); /* time w.r.t. timers and the eventloop, updated after each poll */
+void ev_now_update (EV_P);
 
 #else
 

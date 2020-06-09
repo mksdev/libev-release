@@ -1,5 +1,13 @@
 Revision history for libev, a high-performance and full-featured event loop.
 
+3.44 Mon Sep 29 05:18:39 CEST 2008
+	- embed watchers now automatically invoke ev_loop_fork on the
+          embedded loop when the parent loop forks.
+	- new function: ev_now_update (loop).
+	- verify_watcher was not marked static.
+        - improve the "associating..." manpage section.
+        - documentation tweaks here and there.
+
 3.43 Sun Jul  6 05:34:41 CEST 2008
 	- include more include files on windows to get struct _stati64
           (reported by Chris Hulbert, but doesn't quite fix his issue).

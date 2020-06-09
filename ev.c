@@ -1513,7 +1513,7 @@ ev_loop_fork (EV_P)
 }
 
 #if EV_VERIFY
-void noinline
+static void noinline
 verify_watcher (EV_P_ W w)
 {
   assert (("watcher has invalid priority", ABSPRI (w) >= 0 && ABSPRI (w) < NUMPRI));
@@ -1909,6 +1909,12 @@ void
 ev_unref (EV_P)
 {
   --activecnt;
+}
+
+void
+ev_now_update (EV_P)
+{
+  time_update (EV_A_ 1e100);
 }
 
 static int loop_done;
@@ -2829,6 +2835,18 @@ embed_prepare_cb (EV_P_ ev_prepare *prepare, int revents)
   }
 }
 
+static void
+embed_fork_cb (EV_P_ ev_fork *fork_w, int revents)
+{
+  ev_embed *w = (ev_embed *)(((char *)fork_w) - offsetof (ev_embed, fork));
+
+  {
+    struct ev_loop *loop = w->other;
+
+    ev_loop_fork (EV_A);
+  }
+}
+
 #if 0
 static void
 embed_idle_cb (EV_P_ ev_idle *idle, int revents)
@@ -2858,6 +2876,9 @@ ev_embed_start (EV_P_ ev_embed *w)
   ev_set_priority (&w->prepare, EV_MINPRI);
   ev_prepare_start (EV_A_ &w->prepare);
 
+  ev_fork_init (&w->fork, embed_fork_cb);
+  ev_fork_start (EV_A_ &w->fork);
+
   /*ev_idle_init (&w->idle, e,bed_idle_cb);*/
 
   ev_start (EV_A_ (W)w, 1);
@@ -2874,10 +2895,9 @@ ev_embed_stop (EV_P_ ev_embed *w)
 
   EV_FREQUENT_CHECK;
 
-  ev_io_stop (EV_A_ &w->io);
+  ev_io_stop      (EV_A_ &w->io);
   ev_prepare_stop (EV_A_ &w->prepare);
-
-  ev_stop (EV_A_ (W)w);
+  ev_fork_stop    (EV_A_ &w->fork);
 
   EV_FREQUENT_CHECK;
 }
@@ -2984,7 +3004,7 @@ once_cb (EV_P_ struct ev_once *once, int revents)
   void (*cb)(int revents, void *arg) = once->cb;
   void *arg = once->arg;
 
-  ev_io_stop (EV_A_ &once->io);
+  ev_io_stop    (EV_A_ &once->io);
   ev_timer_stop (EV_A_ &once->to);
   ev_free (once);
 
