@@ -288,7 +288,13 @@ extern "C" {
 #endif
 
 #if EV_USE_INOTIFY
+# include <sys/utsname.h>
 # include <sys/inotify.h>
+/* some very old inotify.h headers don't have IN_DONT_FOLLOW */
+# ifndef IN_DONT_FOLLOW
+#  undef EV_USE_INOTIFY
+#  define EV_USE_INOTIFY 0
+# endif
 #endif
 
 #if EV_SELECT_IS_WINSOCKET
@@ -2493,7 +2499,7 @@ static void noinline
 infy_wd (EV_P_ int slot, int wd, struct inotify_event *ev)
 {
   if (slot < 0)
-    /* overflow, need to check for all hahs slots */
+    /* overflow, need to check for all hash slots */
     for (slot = 0; slot < EV_INOTIFY_HASHSIZE; ++slot)
       infy_wd (EV_A_ slot, wd, ev);
   else
@@ -2537,6 +2543,27 @@ infy_init (EV_P)
   if (fs_fd != -2)
     return;
 
+  /* kernels < 2.6.25 are borked
+   * http://www.ussg.indiana.edu/hypermail/linux/kernel/0711.3/1208.html
+   */
+  {
+    struct utsname buf;
+    int major, minor, micro;
+
+    fs_fd = -1;
+
+    if (uname (&buf))
+      return;
+
+    if (sscanf (buf.release, "%d.%d.%d", &major, &minor, &micro) != 3)
+      return;
+
+    if (major < 2
+        || (major == 2 && minor < 6)
+        || (major == 2 && minor == 6 && micro < 25))
+      return;
+  }
+
   fs_fd = inotify_init ();
 
   if (fs_fd >= 0)
@@ -2575,7 +2602,6 @@ infy_fork (EV_P)
           else
             ev_timer_start (EV_A_ &w->timer);
         }
-
     }
 }
 
@@ -2621,9 +2647,12 @@ stat_timer_cb (EV_P_ ev_timer *w_, int revents)
     || w->prev.st_ctime != w->attr.st_ctime
   ) {
       #if EV_USE_INOTIFY
-        infy_del (EV_A_ w);
-        infy_add (EV_A_ w);
-        ev_stat_stat (EV_A_ w); /* avoid race... */
+        if (fs_fd >= 0)
+          {
+            infy_del (EV_A_ w);
+            infy_add (EV_A_ w);
+            ev_stat_stat (EV_A_ w); /* avoid race... */
+          }
       #endif
 
       ev_feed_event (EV_A_ w, EV_STAT);
@@ -3014,13 +3043,17 @@ once_cb (EV_P_ struct ev_once *once, int revents)
 static void
 once_cb_io (EV_P_ ev_io *w, int revents)
 {
-  once_cb (EV_A_ (struct ev_once *)(((char *)w) - offsetof (struct ev_once, io)), revents);
+  struct ev_once *once = (struct ev_once *)(((char *)w) - offsetof (struct ev_once, io));
+
+  once_cb (EV_A_ once, revents | ev_clear_pending (EV_A_ &once->to));
 }
 
 static void
 once_cb_to (EV_P_ ev_timer *w, int revents)
 {
-  once_cb (EV_A_ (struct ev_once *)(((char *)w) - offsetof (struct ev_once, to)), revents);
+  struct ev_once *once = (struct ev_once *)(((char *)w) - offsetof (struct ev_once, to));
+
+  once_cb (EV_A_ once, revents | ev_clear_pending (EV_A_ &once->io));
 }
 
 void

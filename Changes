@@ -1,5 +1,15 @@
 Revision history for libev, a high-performance and full-featured event loop.
 
+3.45 Tue Oct 21 21:59:26 CEST 2008
+	- disable inotify usage on linux <2.6.25, as it is broken
+          (reported by Yoann Vandoorselaere).
+        - ev_stat errornously would try to add inotify watchers
+          even when inotify wasn't available (this should only
+          have a performance impact).
+	- ev_once now passes both timeout and io to the callback if both
+          occur concurrently, instead of giving timeouts precedence.
+	- disable EV_USE_INOTIFY when sys/inotify.h is too old.
+
 3.44 Mon Sep 29 05:18:39 CEST 2008
 	- embed watchers now automatically invoke ev_loop_fork on the
           embedded loop when the parent loop forks.
