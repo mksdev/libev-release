@@ -1040,11 +1040,16 @@ loop_destroy (EV_P)
 #endif
     }
 
+  ev_free (anfds); anfdmax = 0;
+
   /* have to use the microsoft-never-gets-it-right macro */
   array_free (fdchange, EMPTY);
   array_free (timer, EMPTY);
 #if EV_PERIODIC_ENABLE
   array_free (periodic, EMPTY);
+#endif
+#if EV_FORK_ENABLE
+  array_free (fork, EMPTY);
 #endif
   array_free (prepare, EMPTY);
   array_free (check, EMPTY);
