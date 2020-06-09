@@ -2,7 +2,7 @@ dnl this file is part of libev, do not make local modifications
 dnl http://software.schmorp.de/pkg/libev
 
 dnl libev support 
-AC_CHECK_HEADERS(sys/inotify.h sys/epoll.h sys/event.h sys/queue.h port.h poll.h sys/select.h sys/eventfd.h sys/signalfd.h) 
+AC_CHECK_HEADERS(sys/inotify.h sys/epoll.h sys/event.h port.h poll.h sys/select.h sys/eventfd.h sys/signalfd.h) 
  
 AC_CHECK_FUNCS(inotify_init epoll_ctl kqueue port_create poll select eventfd signalfd)
  
@@ -11,7 +11,8 @@ AC_CHECK_FUNC(clock_gettime, [], [
    if test $(uname) = Linux; then
       AC_MSG_CHECKING(for clock_gettime syscall)
       AC_LINK_IFELSE([AC_LANG_PROGRAM(
-                      [#include <syscall.h>
+                      [#include <unistd.h>
+                       #include <sys/syscall.h>
                        #include <time.h>],
                       [struct timespec ts; int status = syscall (SYS_clock_gettime, CLOCK_REALTIME, &ts)])],
                      [ac_have_clock_syscall=1
