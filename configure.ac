@@ -1,10 +1,10 @@
-AC_INIT
-AC_CONFIG_SRCDIR([ev_epoll.c])
+AC_INIT(ev_epoll.c)
 
-AM_INIT_AUTOMAKE(libev,2.01)
-AC_CONFIG_HEADERS([config.h])
+AM_INIT_AUTOMAKE(libev,2.0)
+AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
 
+AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 
@@ -14,5 +14,4 @@ fi
 
 m4_include([libev.m4])
 
-AC_CONFIG_FILES([Makefile])
-AC_OUTPUT
+AC_OUTPUT(Makefile)
