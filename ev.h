@@ -193,11 +193,11 @@ struct ev_loop;
 /*****************************************************************************/
 
 #define EV_VERSION_MAJOR 4
-#define EV_VERSION_MINOR 0
+#define EV_VERSION_MINOR 1
 
 /* eventmask, revents, events... */
 enum {
-  EV_UNDEF    =         -1, /* guaranteed to be invalid */
+  EV_UNDEF    = 0xFFFFFFFF, /* guaranteed to be invalid */
   EV_NONE     =       0x00, /* no events */
   EV_READ     =       0x01, /* ev_io detected read will not block */
   EV_WRITE    =       0x02, /* ev_io detected write will not block */
@@ -809,9 +809,9 @@ void ev_async_send     (EV_P_ ev_async *w);
     EV_INLINE void ev_default_destroy (void) { ev_loop_destroy (EV_DEFAULT); }
     EV_INLINE void ev_default_fork    (void) { ev_loop_fork    (EV_DEFAULT); }
     #if EV_FEATURE_API
-      EV_INLINE void ev_loop_count  (EV_P) { ev_iteration  (EV_A); }
-      EV_INLINE void ev_loop_depth  (EV_P) { ev_depth      (EV_A); }
-      EV_INLINE void ev_loop_verify (EV_P) { ev_verify     (EV_A); }
+      EV_INLINE unsigned int ev_loop_count  (EV_P) { return ev_iteration  (EV_A); }
+      EV_INLINE unsigned int ev_loop_depth  (EV_P) { return ev_depth      (EV_A); }
+      EV_INLINE void         ev_loop_verify (EV_P) {        ev_verify     (EV_A); }
     #endif
   #endif
 #else
