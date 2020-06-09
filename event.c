@@ -1,7 +1,7 @@
 /*
  * libevent compatibility layer
  *
- * Copyright (c) 2007 Marc Alexander Lehmann <libev@schmorp.de>
+ * Copyright (c) 2007,2008 Marc Alexander Lehmann <libev@schmorp.de>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modifica-
@@ -285,7 +285,6 @@ int event_pending (struct event *ev, short events, struct timeval *tv)
 {
   short revents = 0;
   dLOOPev;
-
 
   if (ev->ev_events & EV_SIGNAL)
     {

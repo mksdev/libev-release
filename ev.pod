@@ -66,7 +66,7 @@ libev - a high performance full-featured event loop written in C
 
 The newest version of this document is also available as an html-formatted
 web page you might find easier to navigate when reading it for the first
-time: L<http://cvs.schmorp.de/libev/ev.html>.
+time: L<http://pod.tst.eu/http://cvs.schmorp.de/libev/ev.pod>.
 
 Libev is an event loop: you register interest in certain events (such as a
 file descriptor being readable or a timeout occurring), and it will manage
@@ -118,6 +118,27 @@ to the C<double> type in C, and when you need to do any calculations on
 it, you should treat it as some floatingpoint value. Unlike the name
 component C<stamp> might indicate, it is also used for time differences
 throughout libev.
+
+=head1 ERROR HANDLING
+
+Libev knows three classes of errors: operating system errors, usage errors
+and internal errors (bugs).
+
+When libev catches an operating system error it cannot handle (for example
+a syscall indicating a condition libev cannot fix), it calls the callback
+set via C<ev_set_syserr_cb>, which is supposed to fix the problem or
+abort. The default is to print a diagnostic message and to call C<abort
+()>.
+
+When libev detects a usage error such as a negative timer interval, then
+it will print a diagnostic message and abort (via the C<assert> mechanism,
+so C<NDEBUG> will disable this checking): these are programming errors in
+the libev caller and need to be fixed there.
+
+Libev also has a few internal error-checking C<assert>ions, and also has
+extensive consistency checking code. These do not trigger under normal
+circumstances, as they indicate either a bug in libev or worse.
+
 
 =head1 GLOBAL FUNCTIONS
 
@@ -338,7 +359,7 @@ parallelity (most of the file descriptors should be busy). If you are
 writing a server, you should C<accept ()> in a loop to accept as many
 connections as possible during one iteration. You might also want to have
 a look at C<ev_set_io_collect_interval ()> to increase the amount of
-readyness notifications you get per iteration.
+readiness notifications you get per iteration.
 
 =item C<EVBACKEND_POLL>    (value 2, poll backend, available everywhere except on windows)
 
@@ -427,7 +448,7 @@ file descriptor per loop iteration. For small and medium numbers of file
 descriptors a "slow" C<EVBACKEND_SELECT> or C<EVBACKEND_POLL> backend
 might perform better.
 
-On the positive side, ignoring the spurious readyness notifications, this
+On the positive side, ignoring the spurious readiness notifications, this
 backend actually performed to specification in all tests and is fully
 embeddable, which is a rare feat among the OS-specific backends.
 
@@ -690,6 +711,17 @@ interval to a value near C<0.1> or so, which is often enough for
 interactive servers (of course not for games), likewise for timeouts. It
 usually doesn't make much sense to set it to a lower value than C<0.01>,
 as this approsaches the timing granularity of most systems.
+
+=item ev_loop_verify (loop)
+
+This function only does something when C<EV_VERIFY> support has been
+compiled in. It tries to go through all internal structures and checks
+them for validity. If anything is found to be inconsistent, it will print
+an error message to standard error and call C<abort ()>.
+
+This can be used to catch bugs inside libev itself: under normal
+circumstances, this function will never abort as of course libev keeps its
+data structures consistent.
 
 =back
 
@@ -1034,7 +1066,7 @@ If you must do this, then force the use of a known-to-be-good backend
 C<EVBACKEND_POLL>).
 
 Another thing you have to watch out for is that it is quite easy to
-receive "spurious" readyness notifications, that is your callback might
+receive "spurious" readiness notifications, that is your callback might
 be called with C<EV_READ> but a subsequent C<read>(2) will actually block
 because there is no data. Not only are some backends known to create a
 lot of those (for example solaris ports), it is very easy to get into
@@ -1153,8 +1185,8 @@ Timer watchers are simple relative timers that generate an event after a
 given time, and optionally repeating in regular intervals after that.
 
 The timers are based on real time, that is, if you register an event that
-times out after an hour and you reset your system clock to last years
-time, it will still time out after (roughly) and hour. "Roughly" because
+times out after an hour and you reset your system clock to january last
+year, it will still time out after (roughly) and hour. "Roughly" because
 detecting time jumps is hard, and some inaccuracies are unavoidable (the
 monotonic clock option helps a lot here).
 
@@ -1166,7 +1198,7 @@ on the current time, use something like this to adjust for this:
 
    ev_timer_set (&timer, after + ev_now () - ev_time (), 0.);
 
-The callback is guarenteed to be invoked only when its timeout has passed,
+The callback is guarenteed to be invoked only after its timeout has passed,
 but if multiple timers become ready during the same loop iteration then
 order of execution is undefined.
 
@@ -1178,16 +1210,17 @@ order of execution is undefined.
 
 =item ev_timer_set (ev_timer *, ev_tstamp after, ev_tstamp repeat)
 
-Configure the timer to trigger after C<after> seconds. If C<repeat> is
-C<0.>, then it will automatically be stopped. If it is positive, then the
-timer will automatically be configured to trigger again C<repeat> seconds
-later, again, and again, until stopped manually.
+Configure the timer to trigger after C<after> seconds. If C<repeat>
+is C<0.>, then it will automatically be stopped once the timeout is
+reached. If it is positive, then the timer will automatically be
+configured to trigger again C<repeat> seconds later, again, and again,
+until stopped manually.
 
-The timer itself will do a best-effort at avoiding drift, that is, if you
-configure a timer to trigger every 10 seconds, then it will trigger at
-exactly 10 second intervals. If, however, your program cannot keep up with
-the timer (because it takes longer than those 10 seconds to do stuff) the
-timer will not fire more than once per event loop iteration.
+The timer itself will do a best-effort at avoiding drift, that is, if
+you configure a timer to trigger every 10 seconds, then it will normally
+trigger at exactly 10 second intervals. If, however, your program cannot
+keep up with the timer (because it takes longer than those 10 seconds to
+do stuff) the timer will not fire more than once per event loop iteration.
 
 =item ev_timer_again (loop, ev_timer *)
 
@@ -1274,18 +1307,19 @@ Periodic watchers are also timers of a kind, but they are very versatile
 
 Unlike C<ev_timer>'s, they are not based on real time (or relative time)
 but on wallclock time (absolute time). You can tell a periodic watcher
-to trigger "at" some specific point in time. For example, if you tell a
+to trigger after some specific point in time. For example, if you tell a
 periodic watcher to trigger in 10 seconds (by specifiying e.g. C<ev_now ()
-+ 10.>) and then reset your system clock to the last year, then it will
-take a year to trigger the event (unlike an C<ev_timer>, which would trigger
-roughly 10 seconds later).
++ 10.>, that is, an absolute time not a delay) and then reset your system
+clock to january of the previous year, then it will take more than year
+to trigger the event (unlike an C<ev_timer>, which would still trigger
+roughly 10 seconds later as it uses a relative timeout).
 
-They can also be used to implement vastly more complex timers, such as
-triggering an event on each midnight, local time or other, complicated,
-rules.
+C<ev_periodic>s can also be used to implement vastly more complex timers,
+such as triggering an event on each "midnight, local time", or other
+complicated, rules.
 
 As with timers, the callback is guarenteed to be invoked only when the
-time (C<at>) has been passed, but if multiple periodic timers become ready
+time (C<at>) has passed, but if multiple periodic timers become ready
 during the same loop iteration then order of execution is undefined.
 
 =head3 Watcher-Specific Functions and Data Members
@@ -1303,10 +1337,10 @@ operation, and we will explain them from simplest to complex:
 
 =item * absolute timer (at = time, interval = reschedule_cb = 0)
 
-In this configuration the watcher triggers an event at the wallclock time
-C<at> and doesn't repeat. It will not adjust when a time jump occurs,
-that is, if it is to be run at January 1st 2011 then it will run when the
-system time reaches or surpasses this time.
+In this configuration the watcher triggers an event after the wallclock
+time C<at> has passed and doesn't repeat. It will not adjust when a time
+jump occurs, that is, if it is to be run at January 1st 2011 then it will
+run when the system time reaches or surpasses this time.
 
 =item * repeating interval timer (at = offset, interval > 0, reschedule_cb = 0)
 
@@ -1315,7 +1349,8 @@ C<at + N * interval> time (for some integer N, which can also be negative)
 and then repeat, regardless of any time jumps.
 
 This can be used to create timers that do not drift with respect to system
-time:
+time, for example, here is a C<ev_periodic> that triggers each hour, on
+the hour:
 
    ev_periodic_set (&periodic, 0., 3600., 0);
 
@@ -1330,7 +1365,12 @@ time where C<time = at (mod interval)>, regardless of any time jumps.
 
 For numerical stability it is preferable that the C<at> value is near
 C<ev_now ()> (the current time), but there is no range requirement for
-this value.
+this value, and in fact is often specified as zero.
+
+Note also that there is an upper limit to how often a timer can fire (cpu
+speed for example), so if C<interval> is very small then timing stability
+will of course detoriate. Libev itself tries to be exact to be about one
+millisecond (if the OS supports it and the machine is fast enough).
 
 =item * manual reschedule mode (at and interval ignored, reschedule_cb = callback)
 
@@ -1340,12 +1380,14 @@ reschedule callback will be called with the watcher as first, and the
 current time as second argument.
 
 NOTE: I<This callback MUST NOT stop or destroy any periodic watcher,
-ever, or make any event loop modifications>. If you need to stop it,
-return C<now + 1e30> (or so, fudge fudge) and stop it afterwards (e.g. by
-starting an C<ev_prepare> watcher, which is legal).
+ever, or make ANY event loop modifications whatsoever>.
 
-Its prototype is C<ev_tstamp (*reschedule_cb)(struct ev_periodic *w,
-ev_tstamp now)>, e.g.:
+If you need to stop it, return C<now + 1e30> (or so, fudge fudge) and stop
+it afterwards (e.g. by starting an C<ev_prepare> watcher, which is the
+only event loop modification you are allowed to do).
+
+The callback prototype is C<ev_tstamp (*reschedule_cb)(struct ev_periodic
+*w, ev_tstamp now)>, e.g.:
 
    static ev_tstamp my_rescheduler (struct ev_periodic *w, ev_tstamp now)
    {
@@ -1357,11 +1399,11 @@ It must return the next time to trigger, based on the passed time value
 will usually be called just before the callback will be triggered, but
 might be called at other times, too.
 
-NOTE: I<< This callback must always return a time that is later than the
-passed C<now> value >>. Not even C<now> itself will do, it I<must> be larger.
+NOTE: I<< This callback must always return a time that is higher than or
+equal to the passed C<now> value >>.
 
 This can be used to create very complex timers, such as a timer that
-triggers on each midnight, local time. To do this, you would calculate the
+triggers on "next midnight, local time". To do this, you would calculate the
 next midnight after C<now> and return the timestamp value for this. How
 you do this is, again, up to you (but it is not trivial, which is the main
 reason I omitted it as an example).
@@ -1374,6 +1416,11 @@ Simply stops and restarts the periodic watcher again. This is only useful
 when you changed some parameters or the reschedule callback would return
 a different time than the last time it was called (e.g. in a crond like
 program when the crontabs have changed).
+
+=item ev_tstamp ev_periodic_at (ev_periodic *)
+
+When active, returns the absolute time that the watcher is supposed to
+trigger next.
 
 =item ev_tstamp offset [read-write]
 
@@ -1394,11 +1441,6 @@ called.
 The current reschedule callback, or C<0>, if this functionality is
 switched off. Can be changed any time, but changes only take effect when
 the periodic timer fires or C<ev_periodic_again> is being called.
-
-=item ev_tstamp at [read-only]
-
-When active, contains the absolute time that the watcher is supposed to
-trigger next.
 
 =back
 
@@ -1612,11 +1654,12 @@ resource-intensive.
 
 At the time of this writing, only the Linux inotify interface is
 implemented (implementing kqueue support is left as an exercise for the
-reader). Inotify will be used to give hints only and should not change the
-semantics of C<ev_stat> watchers, which means that libev sometimes needs
-to fall back to regular polling again even with inotify, but changes are
-usually detected immediately, and if the file exists there will be no
-polling.
+reader, note, however, that the author sees no way of implementing ev_stat
+semantics with kqueue). Inotify will be used to give hints only and should
+not change the semantics of C<ev_stat> watchers, which means that libev
+sometimes needs to fall back to regular polling again even with inotify,
+but changes are usually detected immediately, and if the file exists there
+will be no polling.
 
 =head3 ABI Issues (Largefile Support)
 
@@ -1636,9 +1679,9 @@ available on Linux) and present at runtime, it will be used to speed up
 change detection where possible. The inotify descriptor will be created lazily
 when the first C<ev_stat> watcher is being started.
 
-Inotify presense does not change the semantics of C<ev_stat> watchers
+Inotify presence does not change the semantics of C<ev_stat> watchers
 except that changes might be detected earlier, and in some cases, to avoid
-making regular C<stat> calls. Even in the presense of inotify support
+making regular C<stat> calls. Even in the presence of inotify support
 there are many cases where libev has to resort to regular C<stat> polling.
 
 (There is no support for kqueue, as apparently it cannot be used to
@@ -1651,16 +1694,25 @@ The C<stat ()> syscall only supports full-second resolution portably, and
 even on systems where the resolution is higher, many filesystems still
 only support whole seconds.
 
-That means that, if the time is the only thing that changes, you might
-miss updates: on the first update, C<ev_stat> detects a change and calls
-your callback, which does something. When there is another update within
-the same second, C<ev_stat> will be unable to detect it.
+That means that, if the time is the only thing that changes, you can
+easily miss updates: on the first update, C<ev_stat> detects a change and
+calls your callback, which does something. When there is another update
+within the same second, C<ev_stat> will be unable to detect it as the stat
+data does not change.
 
-The solution to this is to delay acting on a change for a second (or till
-the next second boundary), using a roughly one-second delay C<ev_timer>
-(C<ev_timer_set (w, 0., 1.01); ev_timer_again (loop, w)>). The C<.01>
-is added to work around small timing inconsistencies of some operating
-systems.
+The solution to this is to delay acting on a change for slightly more
+than a second (or till slightly after the next full second boundary), using
+a roughly one-second-delay C<ev_timer> (e.g. C<ev_timer_set (w, 0., 1.02);
+ev_timer_again (loop, w)>).
+
+The C<.02> offset is added to work around small timing inconsistencies
+of some operating systems (where the second counter of the current time
+might be be delayed. One such system is the Linux kernel, where a call to
+C<gettimeofday> might return a timestamp with a full second later than
+a subsequent C<time> call - if the equivalent of C<time ()> is used to
+update file times then there will be a small window where the kernel uses
+the previous second to update file times but libev might already execute
+the timer callback).
 
 =head3 Watcher-Specific Functions and Data Members
 
@@ -1676,28 +1728,32 @@ be detected and should normally be specified as C<0> to let libev choose
 a suitable value. The memory pointed to by C<path> must point to the same
 path for as long as the watcher is active.
 
-The callback will be receive C<EV_STAT> when a change was detected,
-relative to the attributes at the time the watcher was started (or the
-last change was detected).
+The callback will receive C<EV_STAT> when a change was detected, relative
+to the attributes at the time the watcher was started (or the last change
+was detected).
 
 =item ev_stat_stat (loop, ev_stat *)
 
 Updates the stat buffer immediately with new values. If you change the
-watched path in your callback, you could call this fucntion to avoid
-detecting this change (while introducing a race condition). Can also be
-useful simply to find out the new values.
+watched path in your callback, you could call this function to avoid
+detecting this change (while introducing a race condition if you are not
+the only one changing the path). Can also be useful simply to find out the
+new values.
 
 =item ev_statdata attr [read-only]
 
-The most-recently detected attributes of the file. Although the type is of
+The most-recently detected attributes of the file. Although the type is
 C<ev_statdata>, this is usually the (or one of the) C<struct stat> types
-suitable for your system. If the C<st_nlink> member is C<0>, then there
-was some error while C<stat>ing the file.
+suitable for your system, but you can only rely on the POSIX-standardised
+members to be present. If the C<st_nlink> member is C<0>, then there was
+some error while C<stat>ing the file.
 
 =item ev_statdata prev [read-only]
 
 The previous attributes of the file. The callback gets invoked whenever
-C<prev> != C<attr>.
+C<prev> != C<attr>, or, more precisely, one or more of these members
+differ: C<st_dev>, C<st_ino>, C<st_mode>, C<st_nlink>, C<st_uid>,
+C<st_gid>, C<st_rdev>, C<st_size>, C<st_atime>, C<st_mtime>, C<st_ctime>.
 
 =item ev_tstamp interval [read-only]
 
@@ -1761,7 +1817,7 @@ C<ev_timer> callback invocation).
   ...
   ev_stat_init (&passwd, stat_cb, "/etc/passwd", 0.);
   ev_stat_start (loop, &passwd);
-  ev_timer_init (&timer, timer_cb, 0., 1.01);
+  ev_timer_init (&timer, timer_cb, 0., 1.02);
 
 
 =head2 C<ev_idle> - when you've got nothing better to do...
@@ -1859,7 +1915,7 @@ It is recommended to give C<ev_check> watchers highest (C<EV_MAXPRI>)
 priority, to ensure that they are being run before any other watchers
 after the poll. Also, C<ev_check> watchers (and C<ev_prepare> watchers,
 too) should not activate ("feed") events into libev. While libev fully
-supports this, they will be called before other C<ev_check> watchers
+supports this, they might get executed before other C<ev_check> watchers
 did their job. As C<ev_check> watchers are often used to embed other
 (non-libev) event loops those other event loops might be in an unusable
 state until their C<ev_check> watcher ran (always remind yourself to
@@ -1884,9 +1940,9 @@ macros, but using them is utterly, utterly and completely pointless.
 There are a number of principal ways to embed other event loops or modules
 into libev. Here are some ideas on how to include libadns into libev
 (there is a Perl module named C<EV::ADNS> that does this, which you could
-use for an actually working example. Another Perl module named C<EV::Glib>
-embeds a Glib main context into libev, and finally, C<Glib::EV> embeds EV
-into the Glib event loop).
+use as a working example. Another Perl module named C<EV::Glib> embeds a
+Glib main context into libev, and finally, C<Glib::EV> embeds EV into the
+Glib event loop).
 
 Method 1: Add IO watchers and a timeout watcher in a prepare handler,
 and in a check watcher, destroy them and call into libadns. What follows
@@ -2968,8 +3024,9 @@ defined to be C<0>, then they are not.
 =item EV_MINIMAL
 
 If you need to shave off some kilobytes of code at the expense of some
-speed, define this symbol to C<1>. Currently only used for gcc to override
-some inlining decisions, saves roughly 30% codesize of amd64.
+speed, define this symbol to C<1>. Currently this is used to override some
+inlining decisions, saves roughly 30% codesize of amd64. It also selects a
+much smaller 2-heap for timer management over the default 4-heap.
 
 =item EV_PID_HASHSIZE
 
@@ -2985,6 +3042,41 @@ inotify watch id. The default size is C<16> (or C<1> with C<EV_MINIMAL>),
 usually more than enough. If you need to manage thousands of C<ev_stat>
 watchers you might want to increase this value (I<must> be a power of
 two).
+
+=item EV_USE_4HEAP
+
+Heaps are not very cache-efficient. To improve the cache-efficiency of the
+timer and periodics heap, libev uses a 4-heap when this symbol is defined
+to C<1>. The 4-heap uses more complicated (longer) code but has
+noticably faster performance with many (thousands) of watchers.
+
+The default is C<1> unless C<EV_MINIMAL> is set in which case it is C<0>
+(disabled).
+
+=item EV_HEAP_CACHE_AT
+
+Heaps are not very cache-efficient. To improve the cache-efficiency of the
+timer and periodics heap, libev can cache the timestamp (I<at>) within
+the heap structure (selected by defining C<EV_HEAP_CACHE_AT> to C<1>),
+which uses 8-12 bytes more per watcher and a few hundred bytes more code,
+but avoids random read accesses on heap changes. This improves performance
+noticably with with many (hundreds) of watchers.
+
+The default is C<1> unless C<EV_MINIMAL> is set in which case it is C<0>
+(disabled).
+
+=item EV_VERIFY
+
+Controls how much internal verification (see C<ev_loop_verify ()>) will
+be done: If set to C<0>, no internal verification code will be compiled
+in. If set to C<1>, then verification code will be compiled in, but not
+called. If set to C<2>, then the internal verification code will be
+called once per loop, which can slow down libev. If set to C<3>, then the
+verification code will be called very frequently, which will slow down
+libev considerably.
+
+The default is C<1>, unless C<EV_MINIMAL> is set, in which case it will be
+C<0.>
 
 =item EV_COMMON
 
@@ -3164,8 +3256,8 @@ have many watchers waiting for the same fd or signal).
 
 =item Finding the next timer in each loop iteration: O(1)
 
-By virtue of using a binary heap, the next timer is always found at the
-beginning of the storage array.
+By virtue of using a binary or 4-heap, the next timer is always found at a
+fixed position in the storage array.
 
 =item Each change on a file descriptor per loop iteration: O(number_of_watchers_for_this_fd)
 
@@ -3204,26 +3296,32 @@ the form of the C<EVBACKEND_SELECT> backend, and only supports socket
 descriptors. This only applies when using Win32 natively, not when using
 e.g. cygwin.
 
+Lifting these limitations would basically require the full
+re-implementation of the I/O system. If you are into these kinds of
+things, then note that glib does exactly that for you in a very portable
+way (note also that glib is the slowest event library known to man).
+
 There is no supported compilation method available on windows except
 embedding it into other applications.
 
-Due to the many, low, and arbitrary limits on the win32 platform and the
-abysmal performance of winsockets, using a large number of sockets is not
-recommended (and not reasonable). If your program needs to use more than
-a hundred or so sockets, then likely it needs to use a totally different
-implementation for windows, as libev offers the POSIX model, which cannot
-be implemented efficiently on windows (microsoft monopoly games).
+Due to the many, low, and arbitrary limits on the win32 platform and
+the abysmal performance of winsockets, using a large number of sockets
+is not recommended (and not reasonable). If your program needs to use
+more than a hundred or so sockets, then likely it needs to use a totally
+different implementation for windows, as libev offers the POSIX readiness
+notification model, which cannot be implemented efficiently on windows
+(microsoft monopoly games).
 
 =over 4
 
 =item The winsocket select function
 
-The winsocket C<select> function doesn't follow POSIX in that it requires
-socket I<handles> and not socket I<file descriptors>. This makes select
-very inefficient, and also requires a mapping from file descriptors
-to socket handles. See the discussion of the C<EV_SELECT_USE_FD_SET>,
-C<EV_SELECT_IS_WINSOCKET> and C<EV_FD_TO_WIN32_HANDLE> preprocessor
-symbols for more info.
+The winsocket C<select> function doesn't follow POSIX in that it
+requires socket I<handles> and not socket I<file descriptors> (it is
+also extremely buggy). This makes select very inefficient, and also
+requires a mapping from file descriptors to socket handles. See the
+discussion of the C<EV_SELECT_USE_FD_SET>, C<EV_SELECT_IS_WINSOCKET> and
+C<EV_FD_TO_WIN32_HANDLE> preprocessor symbols for more info.
 
 The configuration for a "naked" win32 using the microsoft runtime
 libraries and raw winsocket select is:
@@ -3236,11 +3334,13 @@ complexity in the O(n²) range when using win32.
 
 =item Limited number of file descriptors
 
-Windows has numerous arbitrary (and low) limits on things. Early versions
-of winsocket's select only supported waiting for a max. of C<64> handles
-(probably owning to the fact that all windows kernels can only wait for
-C<64> things at the same time internally; microsoft recommends spawning a
-chain of threads and wait for 63 handles and the previous thread in each).
+Windows has numerous arbitrary (and low) limits on things.
+
+Early versions of winsocket's select only supported waiting for a maximum
+of C<64> handles (probably owning to the fact that all windows kernels
+can only wait for C<64> things at the same time internally; microsoft
+recommends spawning a chain of threads and wait for 63 handles and the
+previous thread in each. Great).
 
 Newer versions support more handles, but you need to define C<FD_SETSIZE>
 to some high number (e.g. C<2048>) before compiling the winsocket select
@@ -3260,6 +3360,105 @@ wrap all I/O functions and provide your own fd management, but the cost of
 calling select (O(n²)) will likely make this unworkable.
 
 =back
+
+
+=head1 PORTABILITY REQUIREMENTS
+
+In addition to a working ISO-C implementation, libev relies on a few
+additional extensions:
+
+=over 4
+
+=item C<sig_atomic_t volatile> must be thread-atomic as well
+
+The type C<sig_atomic_t volatile> (or whatever is defined as
+C<EV_ATOMIC_T>) must be atomic w.r.t. accesses from different
+threads. This is not part of the specification for C<sig_atomic_t>, but is
+believed to be sufficiently portable.
+
+=item C<sigprocmask> must work in a threaded environment
+
+Libev uses C<sigprocmask> to temporarily block signals. This is not
+allowed in a threaded program (C<pthread_sigmask> has to be used). Typical
+pthread implementations will either allow C<sigprocmask> in the "main
+thread" or will block signals process-wide, both behaviours would
+be compatible with libev. Interaction between C<sigprocmask> and
+C<pthread_sigmask> could complicate things, however.
+
+The most portable way to handle signals is to block signals in all threads
+except the initial one, and run the default loop in the initial thread as
+well.
+
+=item C<long> must be large enough for common memory allocation sizes
+
+To improve portability and simplify using libev, libev uses C<long>
+internally instead of C<size_t> when allocating its data structures. On
+non-POSIX systems (Microsoft...) this might be unexpectedly low, but
+is still at least 31 bits everywhere, which is enough for hundreds of
+millions of watchers.
+
+=item C<double> must hold a time value in seconds with enough accuracy
+
+The type C<double> is used to represent timestamps. It is required to
+have at least 51 bits of mantissa (and 9 bits of exponent), which is good
+enough for at least into the year 4000. This requirement is fulfilled by
+implementations implementing IEEE 754 (basically all existing ones).
+
+=back
+
+If you know of other additional requirements drop me a note.
+
+
+=head1 COMPILER WARNINGS
+
+Depending on your compiler and compiler settings, you might get no or a
+lot of warnings when compiling libev code. Some people are apparently
+scared by this.
+
+However, these are unavoidable for many reasons. For one, each compiler
+has different warnings, and each user has different tastes regarding
+warning options. "Warn-free" code therefore cannot be a goal except when
+targetting a specific compiler and compiler-version.
+
+Another reason is that some compiler warnings require elaborate
+workarounds, or other changes to the code that make it less clear and less
+maintainable.
+
+And of course, some compiler warnings are just plain stupid, or simply
+wrong (because they don't actually warn about the cindition their message
+seems to warn about).
+
+While libev is written to generate as few warnings as possible,
+"warn-free" code is not a goal, and it is recommended not to build libev
+with any compiler warnings enabled unless you are prepared to cope with
+them (e.g. by ignoring them). Remember that warnings are just that:
+warnings, not errors, or proof of bugs.
+
+
+=head1 VALGRIND
+
+Valgrind has a special section here because it is a popular tool that is
+highly useful, but valgrind reports are very hard to interpret.
+
+If you think you found a bug (memory leak, uninitialised data access etc.)
+in libev, then check twice: If valgrind reports something like:
+
+   ==2274==    definitely lost: 0 bytes in 0 blocks.
+   ==2274==      possibly lost: 0 bytes in 0 blocks.
+   ==2274==    still reachable: 256 bytes in 1 blocks.
+
+then there is no memory leak. Similarly, under some circumstances,
+valgrind might report kernel bugs as if it were a bug in libev, or it
+might be confused (it is a very good tool, but only a tool).
+
+If you are unsure about something, feel free to contact the mailing list
+with the full valgrind report and an explanation on why you think this is
+a bug in libev. However, don't be annoyed when you get a brisk "this is
+no bug" answer and take the chance of learning how to interpret valgrind
+properly.
+
+If you need, for some reason, empty reports from valgrind for your project
+I suggest using suppression lists.
 
 
 =head1 AUTHOR
