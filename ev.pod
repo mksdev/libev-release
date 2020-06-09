@@ -198,18 +198,21 @@ See the description of C<ev_embed> watchers for more info.
 =item ev_set_allocator (void *(*cb)(void *ptr, long size))
 
 Sets the allocation function to use (the prototype is similar - the
-semantics is identical - to the realloc C function). It is used to
-allocate and free memory (no surprises here). If it returns zero when
-memory needs to be allocated, the library might abort or take some
-potentially destructive action. The default is your system realloc
-function.
+semantics are identical to the C<realloc> C89/SuS/POSIX function). It is
+used to allocate and free memory (no surprises here). If it returns zero
+when memory needs to be allocated (C<size != 0>), the library might abort
+or take some potentially destructive action.
+
+Since some systems (at least OpenBSD and Darwin) fail to implement
+correct C<realloc> semantics, libev will use a wrapper around the system
+C<realloc> and C<free> functions by default.
 
 You could override this function in high-availability programs to, say,
 free some memory if it cannot allocate memory, to use a special allocator,
 or even to sleep a while and retry until some memory is available.
 
 Example: Replace the libev allocator with one that waits a bit and then
-retries).
+retries (example requires a standards-compliant C<realloc>).
 
    static void *
    persistent_realloc (void *ptr, size_t size)
@@ -257,13 +260,6 @@ Example: This is basically the same thing that libev does internally, too.
 An event loop is described by a C<struct ev_loop *>. The library knows two
 types of such loops, the I<default> loop, which supports signals and child
 events, and dynamically created loops which do not.
-
-If you use threads, a common model is to run the default event loop
-in your main thread (or in a separate thread) and for each thread you
-create, you also create another event loop. Libev itself does no locking
-whatsoever, so if you mix calls to the same event loop in different
-threads, make sure you lock (this is usually a bad idea, though, even if
-done correctly, because it's hideous and inefficient).
 
 =over 4
 
@@ -360,7 +356,7 @@ but it scales phenomenally better. While poll and select usually scale
 like O(total_fds) where n is the total number of fds (or the highest fd),
 epoll scales either O(1) or O(active_fds). The epoll design has a number
 of shortcomings, such as silently dropping events in some hard-to-detect
-cases and rewiring a syscall per fd change, no fork support and bad
+cases and requiring a syscall per fd change, no fork support and bad
 support for dup.
 
 While stopping, setting and starting an I/O watcher in the same iteration
@@ -2384,6 +2380,9 @@ it a private API).
 will fail and all watchers will have the same priority, even though there
 is an ev_pri field.
 
+=item * In libevent, the last base created gets the signals, in libev, the
+first base created (== the default loop) gets the signals.
+
 =item * Other members are not supported.
 
 =item * The libev emulation is I<not> ABI compatible to libevent, you need
@@ -2635,6 +2634,16 @@ suitable for use with C<EV_A>.
 Similar to the other two macros, this gives you the value of the default
 loop, if multiple loops are supported ("ev loop default").
 
+=item C<EV_DEFAULT_UC>, C<EV_DEFAULT_UC_>
+
+Usage identical to C<EV_DEFAULT> and C<EV_DEFAULT_>, but requires that the
+default loop has been initialised (C<UC> == unchecked). Their behaviour
+is undefined when the default loop has not been initialised by a previous
+execution of C<EV_DEFAULT>, C<EV_DEFAULT_> or C<ev_default_init (...)>.
+
+It is often prudent to use C<EV_DEFAULT> when initialising the first
+watcher in a function but use C<EV_DEFAULT_UC> afterwards.
+
 =back
 
 Example: Declare and initialise a check watcher, utilising the above
@@ -2739,9 +2748,9 @@ For this of course you need the m4 file:
 
 =head2 PREPROCESSOR SYMBOLS/MACROS
 
-Libev can be configured via a variety of preprocessor symbols you have to define
-before including any of its files. The default is not to build for multiplicity
-and only include the select backend.
+Libev can be configured via a variety of preprocessor symbols you have to
+define before including any of its files. The default in the absense of
+autoconf is noted for every option.
 
 =over 4
 
@@ -2776,6 +2785,14 @@ note about libraries in the description of C<EV_USE_MONOTONIC>, though.
 
 If defined to be C<1>, libev will assume that C<nanosleep ()> is available
 and will use it for delays. Otherwise it will use C<select ()>.
+
+=item EV_USE_EVENTFD
+
+If defined to be C<1>, then libev will assume that C<eventfd ()> is
+available and will probe for kernel support at runtime. This will improve
+C<ev_signal> and C<ev_async> performance and reduce resource consumption.
+If undefined, it will be enabled if the headers indicate GNU/Linux + Glibc
+2.7 or newer, otherwise disabled.
 
 =item EV_USE_SELECT
 
@@ -2822,8 +2839,9 @@ takes precedence over select.
 
 If defined to be C<1>, libev will compile in support for the Linux
 C<epoll>(7) backend. Its availability will be detected at runtime,
-otherwise another method will be used as fallback. This is the
-preferred backend for GNU/Linux systems.
+otherwise another method will be used as fallback. This is the preferred
+backend for GNU/Linux systems. If undefined, it will be enabled if the
+headers indicate GNU/Linux + Glibc 2.4 or newer, otherwise disabled.
 
 =item EV_USE_KQUEUE
 
@@ -2852,7 +2870,8 @@ reserved for future expansion, works like the USE symbols above.
 
 If defined to be C<1>, libev will compile in support for the Linux inotify
 interface to speed up C<ev_stat> watchers. Its actual availability will
-be detected at runtime.
+be detected at runtime. If undefined, it will be enabled if the headers
+indicate GNU/Linux + Glibc 2.4 or newer, otherwise disabled.
 
 =item EV_ATOMIC_T
 
@@ -3047,6 +3066,63 @@ And a F<ev_cpp.C> implementation file that contains libev proper and is compiled
 
   #include "ev_cpp.h"
   #include "ev.c"
+
+
+=head1 THREADS AND COROUTINES
+
+=head2 THREADS
+
+Libev itself is completely threadsafe, but it uses no locking. This
+means that you can use as many loops as you want in parallel, as long as
+only one thread ever calls into one libev function with the same loop
+parameter.
+
+Or put differently: calls with different loop parameters can be done in
+parallel from multiple threads, calls with the same loop parameter must be
+done serially (but can be done from different threads, as long as only one
+thread ever is inside a call at any point in time, e.g. by using a mutex
+per loop).
+
+If you want to know which design is best for your problem, then I cannot
+help you but by giving some generic advice:
+
+=over 4
+
+=item * most applications have a main thread: use the default libev loop
+in that thread, or create a seperate thread running only the default loop.
+
+This helps integrating other libraries or software modules that use libev
+themselves and don't care/know about threading.
+
+=item * one loop per thread is usually a good model.
+
+Doing this is almost never wrong, sometimes a better-performance model
+exists, but it is always a good start.
+
+=item * other models exist, such as the leader/follower pattern, where one
+loop is handed through multiple threads in a kind of round-robbin fashion.
+
+Chosing a model is hard - look around, learn, know that usually you cna do
+better than you currently do :-)
+
+=item * often you need to talk to some other thread which blocks in the
+event loop - C<ev_async> watchers can be used to wake them up from other
+threads safely (or from signal contexts...).
+
+=back
+
+=head2 COROUTINES
+
+Libev is much more accomodating to coroutines ("cooperative threads"):
+libev fully supports nesting calls to it's functions from different
+coroutines (e.g. you can call C<ev_loop> on the same loop from two
+different coroutines and switch freely between both coroutines running the
+loop, as long as you don't confuse yourself). The only exception is that
+you must not do this from C<ev_periodic> reschedule callbacks.
+
+Care has been invested into making sure that libev does not keep local
+state inside C<ev_loop>, and other calls do not usually allow coroutine
+switches.
 
 
 =head1 COMPLEXITIES
