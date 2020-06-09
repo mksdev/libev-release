@@ -58,7 +58,8 @@ namespace ev {
 
   typedef ev_tstamp tstamp;
 
-  enum {
+  enum
+  {
     UNDEF    = EV_UNDEF,
     NONE     = EV_NONE,
     READ     = EV_READ,
@@ -74,6 +75,7 @@ namespace ev {
     FORK     = EV_FORK,
     ASYNC    = EV_ASYNC,
     EMBED    = EV_EMBED,
+#   undef ERROR // some systems stupidly #define ERROR
     ERROR    = EV_ERROR,
   };
 

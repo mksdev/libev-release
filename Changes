@@ -1,6 +1,15 @@
 Revision history for libev, a high-performance and full-featured event loop.
 
-WISH? monotonic clocks times/GetTickCount for coarse corrections?
+3.49 Wed Nov 19 11:26:53 CET 2008
+	- ev_stat watchers will now use inotify as a mere hint on
+          kernels <2.6.25, or if the filesystem is not in the
+          "known to be good" list.
+        - better mingw32 compatibility (it's not as borked as native win32)
+          (analysed by Roger Pack).
+        - include stdio.h in the example program, as too many people are
+          confused by the weird C language otherwise. I guess the next thing
+          I get told is that the "..." ellipses in the examples don't compile
+          with their C compiler.
 
 3.48 Thu Oct 30 09:02:37 CET 2008
 	- further optimise away the EPOLL_CTL_ADD/MOD combo in the epoll
