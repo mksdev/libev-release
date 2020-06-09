@@ -390,7 +390,7 @@ ev_set_syserr_cb (void (*cb)(const char *msg))
 }
 
 static void noinline
-syserr (const char *msg)
+ev_syserr (const char *msg)
 {
   if (!msg)
     msg = "(libev) system error";
@@ -451,6 +451,11 @@ typedef struct
   WL head;
   unsigned char events;
   unsigned char reify;
+  unsigned char emask; /* the epoll backend stores the actual kernel mask in here */
+  unsigned char unused;
+#if EV_USE_EPOLL
+  unsigned int egen;  /* generation counter to counter epoll bugs */
+#endif
 #if EV_SELECT_IS_WINSOCKET
   SOCKET handle;
 #endif
@@ -613,6 +618,9 @@ array_realloc (int elem, void *base, int *cur, int cnt)
   return ev_realloc (base, elem * *cur);
 }
 
+#define array_init_zero(base,count)	\
+  memset ((void *)(base), 0, sizeof (*(base)) * (count))
+
 #define array_needsize(type,base,cur,cnt,init)			\
   if (expect_false ((cnt) > (cur)))				\
     {								\
@@ -664,19 +672,6 @@ queue_events (EV_P_ W *events, int eventcnt, int type)
 }
 
 /*****************************************************************************/
-
-void inline_size
-anfds_init (ANFD *base, int count)
-{
-  while (count--)
-    {
-      base->head   = 0;
-      base->events = EV_NONE;
-      base->reify  = 0;
-
-      ++base;
-    }
-}
 
 void inline_speed
 fd_event (EV_P_ int fd, int revents)
@@ -816,6 +811,7 @@ fd_rearm_all (EV_P)
     if (anfds [fd].events)
       {
         anfds [fd].events = 0;
+        anfds [fd].emask  = 0;
         fd_change (EV_A_ fd, EV_IOFDSET | 1);
       }
 }
@@ -977,18 +973,6 @@ static int signalmax;
 
 static EV_ATOMIC_T gotsig;
 
-void inline_size
-signals_init (ANSIG *base, int count)
-{
-  while (count--)
-    {
-      base->head   = 0;
-      base->gotsig = 0;
-
-      ++base;
-    }
-}
-
 /*****************************************************************************/
 
 void inline_speed
@@ -1019,7 +1003,7 @@ evpipe_init (EV_P)
 #endif
         {
           while (pipe (evpipe))
-            syserr ("(libev) error creating signal/async pipe");
+            ev_syserr ("(libev) error creating signal/async pipe");
 
           fd_intern (evpipe [0]);
           fd_intern (evpipe [1]);
@@ -1660,6 +1644,8 @@ ev_default_destroy (void)
   struct ev_loop *loop = ev_default_loop_ptr;
 #endif
 
+  ev_default_loop_ptr = 0;
+
 #ifndef _WIN32
   ev_ref (EV_A); /* child watcher */
   ev_signal_stop (EV_A_ &childev);
@@ -1675,8 +1661,7 @@ ev_default_fork (void)
   struct ev_loop *loop = ev_default_loop_ptr;
 #endif
 
-  if (backend)
-    postfork = 1; /* must be in line with ev_loop_fork */
+  postfork = 1; /* must be in line with ev_loop_fork */
 }
 
 /*****************************************************************************/
@@ -2141,11 +2126,12 @@ ev_io_start (EV_P_ ev_io *w)
     return;
 
   assert (("ev_io_start called with negative fd", fd >= 0));
+  assert (("ev_io start called with illegal event mask", !(w->events & ~(EV_IOFDSET | EV_READ | EV_WRITE))));
 
   EV_FREQUENT_CHECK;
 
   ev_start (EV_A_ (W)w, 1);
-  array_needsize (ANFD, anfds, anfdmax, fd + 1, anfds_init);
+  array_needsize (ANFD, anfds, anfdmax, fd + 1, array_init_zero);
   wlist_add (&anfds[fd].head, (WL)w);
 
   fd_change (EV_A_ fd, w->events & EV_IOFDSET | 1);
@@ -2347,7 +2333,7 @@ ev_signal_start (EV_P_ ev_signal *w)
     sigprocmask (SIG_SETMASK, &full, &prev);
 #endif
 
-    array_needsize (ANSIG, signals, signalmax, w->signum, signals_init);
+    array_needsize (ANSIG, signals, signalmax, w->signum, array_init_zero);
 
 #ifndef _WIN32
     sigprocmask (SIG_SETMASK, &prev, 0);
