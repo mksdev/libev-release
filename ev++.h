@@ -644,6 +644,11 @@ namespace ev {
     {
       ev_timer_again (EV_A_ static_cast<ev_timer *>(this));
     }
+
+    ev_tstamp remaining ()
+    {
+      return ev_timer_remaining (EV_A_ static_cast<ev_timer *>(this));
+    }
   EV_END_WATCHER (timer, timer)
 
   #if EV_PERIODIC_ENABLE
@@ -725,9 +730,11 @@ namespace ev {
   EV_END_WATCHER (stat, stat)
   #endif
 
+#if EV_IDLE_ENABLE
   EV_BEGIN_WATCHER (idle, idle)
     void set () throw () { }
   EV_END_WATCHER (idle, idle)
+#endif
 
   EV_BEGIN_WATCHER (prepare, prepare)
     void set () throw () { }
