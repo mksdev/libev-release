@@ -277,6 +277,10 @@ flags. If that is troubling you, check C<ev_backend ()> afterwards).
 If you don't know what event loop to use, use the one returned from this
 function.
 
+Note that this function is I<not> thread-safe, so if you want to use it
+from multiple threads, you have to lock (note also that this is unlikely,
+as loops cannot bes hared easily between threads anyway).
+
 The default loop is the only loop that can handle C<ev_signal> and
 C<ev_child> watchers, and to do this, it always registers a handler
 for C<SIGCHLD>. If this is a problem for your app you can either
@@ -467,6 +471,10 @@ Similar to C<ev_default_loop>, but always creates a new event loop that is
 always distinct from the default loop. Unlike the default loop, it cannot
 handle signal and child watchers, and attempts to do so will be greeted by
 undefined behaviour (or a failed assertion if assertions are enabled).
+
+Note that this function I<is> thread-safe, and the recommended way to use
+libev with threads is indeed to create one loop per thread, and using the
+default loop in the "main" or "initial" thread.
 
 Example: Try to create a event loop that uses epoll and nothing else.
 
@@ -1087,6 +1095,18 @@ C<ev_default_fork ()> or C<ev_loop_fork ()> after a fork in the child,
 enable C<EVFLAG_FORKCHECK>, or resort to C<EVBACKEND_SELECT> or
 C<EVBACKEND_POLL>.
 
+=head3 The special problem of SIGPIPE
+
+While not really specific to libev, it is easy to forget about SIGPIPE:
+when reading from a pipe whose other end has been closed, your program
+gets send a SIGPIPE, which, by default, aborts your program. For most
+programs this is sensible behaviour, for daemons, this is usually
+undesirable.
+
+So when you encounter spurious, unexplained daemon exits, make sure you
+ignore SIGPIPE (and maybe make sure you log the exit status of your daemon
+somewhere, as that would have given you a big clue).
+
 
 =head3 Watcher-Specific Functions
 
@@ -1601,6 +1621,17 @@ semantics of C<ev_stat> watchers, which means that libev sometimes needs
 to fall back to regular polling again even with inotify, but changes are
 usually detected immediately, and if the file exists there will be no
 polling.
+
+=head3 ABI Issues (Largefile Support)
+
+Libev by default (unless the user overrides this) uses the default
+compilation environment, which means that on systems with optionally
+disabled large file support, you get the 32 bit version of the stat
+structure. When using the library from programs that change the ABI to
+use 64 bit file offsets the programs will fail. In that case you have to
+compile libev with the same flags to get binary compatibility. This is
+obviously the case with any flags that change the ABI, but the problem is
+most noticably with ev_stat and largefile support.
 
 =head3 Inotify
 
@@ -2258,6 +2289,20 @@ section below on what exactly this means).
 This call incurs the overhead of a syscall only once per loop iteration,
 so while the overhead might be noticable, it doesn't apply to repeated
 calls to C<ev_async_send>.
+
+=item bool = ev_async_pending (ev_async *)
+
+Returns a non-zero value when C<ev_async_send> has been called on the
+watcher but the event has not yet been processed (or even noted) by the
+event loop.
+
+C<ev_async_send> sets a flag in the watcher and wakes up the loop. When
+the loop iterates next and checks for the watcher to have become active,
+it will reset the flag again. C<ev_async_pending> can be used to very
+quickly check wether invoking the loop might be a good idea.
+
+Not that this does I<not> check wether the watcher itself is pending, only
+wether it has been requested to make this watcher pending.
 
 =back
 

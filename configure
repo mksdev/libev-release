@@ -2204,7 +2204,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=libev
- VERSION=3.1
+ VERSION=3.2
 
 
 cat >>confdefs.h <<_ACEOF

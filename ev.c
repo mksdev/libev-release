@@ -453,7 +453,7 @@ ev_sleep (ev_tstamp delay)
 
       nanosleep (&ts, 0);
 #elif defined(_WIN32)
-      Sleep (delay * 1e3);
+      Sleep ((unsigned long)(delay * 1e3));
 #else
       struct timeval tv;
 
@@ -867,14 +867,14 @@ pipecb (EV_P_ ev_io *iow, int revents)
 /*****************************************************************************/
 
 static void
-sighandler (int signum)
+ev_sighandler (int signum)
 {
 #if EV_MULTIPLICITY
   struct ev_loop *loop = &default_loop_struct;
 #endif
 
 #if _WIN32
-  signal (signum, sighandler);
+  signal (signum, ev_sighandler);
 #endif
 
   signals [signum - 1].gotsig = 1;
@@ -1544,9 +1544,7 @@ static int loop_done;
 void
 ev_loop (EV_P_ int flags)
 {
-  loop_done = flags & (EVLOOP_ONESHOT | EVLOOP_NONBLOCK)
-            ? EVUNLOOP_ONE
-            : EVUNLOOP_CANCEL;
+  loop_done = EVUNLOOP_CANCEL;
 
   call_pending (EV_A); /* in case we recurse, ensure ordering stays nice and clean */
 
@@ -1652,9 +1650,12 @@ ev_loop (EV_P_ int flags)
         queue_events (EV_A_ (W *)checks, checkcnt, EV_CHECK);
 
       call_pending (EV_A);
-
     }
-  while (expect_true (activecnt && !loop_done));
+  while (expect_true (
+    activecnt
+    && !loop_done
+    && !(flags & (EVLOOP_ONESHOT | EVLOOP_NONBLOCK))
+  ));
 
   if (loop_done == EVUNLOOP_ONE)
     loop_done = EVUNLOOP_CANCEL;
@@ -1932,10 +1933,10 @@ ev_signal_start (EV_P_ ev_signal *w)
   if (!((WL)w)->next)
     {
 #if _WIN32
-      signal (w->signum, sighandler);
+      signal (w->signum, ev_sighandler);
 #else
       struct sigaction sa;
-      sa.sa_handler = sighandler;
+      sa.sa_handler = ev_sighandler;
       sigfillset (&sa.sa_mask);
       sa.sa_flags = SA_RESTART; /* if restarting works we save one iteration */
       sigaction (w->signum, &sa, 0);
