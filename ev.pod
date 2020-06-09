@@ -8,49 +8,63 @@ libev - a high performance full-featured event loop written in C
 
 =head2 EXAMPLE PROGRAM
 
+  // a single header file is required
   #include <ev.h>
 
+  // every watcher type has its own typedef'd struct
+  // with the name ev_<type>
   ev_io stdin_watcher;
   ev_timer timeout_watcher;
 
-  /* called when data readable on stdin */
+  // all watcher callbacks have a similar signature
+  // this callback is called when data is readable on stdin
   static void
   stdin_cb (EV_P_ struct ev_io *w, int revents)
   {
-    /* puts ("stdin ready"); */
-    ev_io_stop (EV_A_ w); /* just a syntax example */
-    ev_unloop (EV_A_ EVUNLOOP_ALL); /* leave all loop calls */
+    puts ("stdin ready");
+    // for one-shot events, one must manually stop the watcher
+    // with its corresponding stop function.
+    ev_io_stop (EV_A_ w);
+
+    // this causes all nested ev_loop's to stop iterating
+    ev_unloop (EV_A_ EVUNLOOP_ALL);
   }
 
+  // another callback, this time for a time-out
   static void
   timeout_cb (EV_P_ struct ev_timer *w, int revents)
   {
-    /* puts ("timeout"); */
-    ev_unloop (EV_A_ EVUNLOOP_ONE); /* leave one loop call */
+    puts ("timeout");
+    // this causes the innermost ev_loop to stop iterating
+    ev_unloop (EV_A_ EVUNLOOP_ONE);
   }
 
   int
   main (void)
   {
+    // use the default event loop unless you have special needs
     struct ev_loop *loop = ev_default_loop (0);
 
-    /* initialise an io watcher, then start it */
+    // initialise an io watcher, then start it
+    // this one will watch for stdin to become readable
     ev_io_init (&stdin_watcher, stdin_cb, /*STDIN_FILENO*/ 0, EV_READ);
     ev_io_start (loop, &stdin_watcher);
 
-    /* simple non-repeating 5.5 second timeout */
+    // initialise a timer watcher, then start it
+    // simple non-repeating 5.5 second timeout
     ev_timer_init (&timeout_watcher, timeout_cb, 5.5, 0.);
     ev_timer_start (loop, &timeout_watcher);
 
-    /* loop till timeout or data ready */
+    // now wait for events to arrive
     ev_loop (loop, 0);
 
+    // unloop was called, so exit
     return 0;
   }
 
 =head1 DESCRIPTION
 
-The newest version of this document is also available as a html-formatted
+The newest version of this document is also available as an html-formatted
 web page you might find easier to navigate when reading it for the first
 time: L<http://cvs.schmorp.de/libev/ev.html>.
 
@@ -86,12 +100,13 @@ for example).
 
 =head2 CONVENTIONS
 
-Libev is very configurable. In this manual the default configuration will
-be described, which supports multiple event loops. For more info about
-various configuration options please have a look at B<EMBED> section in
-this manual. If libev was configured without support for multiple event
-loops, then all functions taking an initial argument of name C<loop>
-(which is always of type C<struct ev_loop *>) will not have this argument.
+Libev is very configurable. In this manual the default (and most common)
+configuration will be described, which supports multiple event loops. For
+more info about various configuration options please have a look at
+B<EMBED> section in this manual. If libev was configured without support
+for multiple event loops, then all functions taking an initial argument of
+name C<loop> (which is always of type C<struct ev_loop *>) will not have
+this argument.
 
 =head2 TIME REPRESENTATION
 
@@ -299,8 +314,8 @@ enabling this flag.
 This works by calling C<getpid ()> on every iteration of the loop,
 and thus this might slow down your event loop if you do a lot of loop
 iterations and little real work, but is usually not noticeable (on my
-Linux system for example, C<getpid> is actually a simple 5-insn sequence
-without a syscall and thus I<very> fast, but my Linux system also has
+GNU/Linux system for example, C<getpid> is actually a simple 5-insn sequence
+without a syscall and thus I<very> fast, but my GNU/Linux system also has
 C<pthread_atfork> which is even faster).
 
 The big advantage of this flag is that you can forget about fork (and
@@ -507,6 +522,10 @@ quite nicely into a call to C<pthread_atfork>:
 Like C<ev_default_fork>, but acts on an event loop created by
 C<ev_loop_new>. Yes, you have to call this on every allocated event loop
 after fork, and how you do this is entirely your own problem.
+
+=item int ev_is_default_loop (loop)
+
+Returns true when the given loop actually is the default loop, false otherwise.
 
 =item unsigned int ev_loop_count (loop)
 
@@ -775,6 +794,10 @@ The embedded event loop specified in the C<ev_embed> watcher needs attention.
 
 The event loop has been resumed in the child process after fork (see
 C<ev_fork>).
+
+=item C<EV_ASYNC>
+
+The given async watcher has been asynchronously notified (see C<ev_async>).
 
 =item C<EV_ERROR>
 
@@ -1150,7 +1173,7 @@ exactly 10 second intervals. If, however, your program cannot keep up with
 the timer (because it takes longer than those 10 seconds to do stuff) the
 timer will not fire more than once per event loop iteration.
 
-=item ev_timer_again (loop)
+=item ev_timer_again (loop, ev_timer *)
 
 This will act as if the timer timed out and restart it again if it is
 repeating. The exact semantics are:
@@ -1269,7 +1292,7 @@ C<at> and doesn't repeat. It will not adjust when a time jump occurs,
 that is, if it is to be run at January 1st 2011 then it will run when the
 system time reaches or surpasses this time.
 
-=item * non-repeating interval timer (at = offset, interval > 0, reschedule_cb = 0)
+=item * repeating interval timer (at = offset, interval > 0, reschedule_cb = 0)
 
 In this mode the watcher will always be scheduled to time out at the next
 C<at + N * interval> time (for some integer N, which can also be negative)
@@ -1413,6 +1436,12 @@ as you don't register any with libev). Similarly, when the last signal
 watcher for a signal is stopped libev will reset the signal handler to
 SIG_DFL (regardless of what it was set to before).
 
+If possible and supported, libev will install its handlers with
+C<SA_RESTART> behaviour enabled, so syscalls should not be unduly
+interrupted. If you have a problem with syscalls getting interrupted by
+signals you can block all signals in an C<ev_check> watcher and unblock
+them in an C<ev_prepare> watcher.
+
 =head3 Watcher-Specific Functions and Data Members
 
 =over 4
@@ -1430,11 +1459,50 @@ The signal the watcher watches out for.
 
 =back
 
+=head3 Examples
+
+Example: Try to exit cleanly on SIGINT and SIGTERM.
+
+  static void
+  sigint_cb (struct ev_loop *loop, struct ev_signal *w, int revents)
+  {
+    ev_unloop (loop, EVUNLOOP_ALL);
+  }
+
+  struct ev_signal signal_watcher;
+  ev_signal_init (&signal_watcher, sigint_cb, SIGINT);
+  ev_signal_start (loop, &sigint_cb);
+
 
 =head2 C<ev_child> - watch out for process status changes
 
 Child watchers trigger when your process receives a SIGCHLD in response to
-some child status changes (most typically when a child of yours dies).
+some child status changes (most typically when a child of yours dies). It
+is permissible to install a child watcher I<after> the child has been
+forked (which implies it might have already exited), as long as the event
+loop isn't entered (or is continued from a watcher).
+
+Only the default event loop is capable of handling signals, and therefore
+you can only rgeister child watchers in the default event loop.
+
+=head3 Process Interaction
+
+Libev grabs C<SIGCHLD> as soon as the default event loop is
+initialised. This is necessary to guarantee proper behaviour even if
+the first child watcher is started after the child exits. The occurance
+of C<SIGCHLD> is recorded asynchronously, but child reaping is done
+synchronously as part of the event loop processing. Libev always reaps all
+children, even ones not watched.
+
+=head3 Overriding the Built-In Processing
+
+Libev offers no special support for overriding the built-in child
+processing, but if your application collides with libev's default child
+handler, you can override it easily by installing your own handler for
+C<SIGCHLD> after initialising the default loop, and making sure the
+default loop never gets destroyed. You are encouraged, however, to use an
+event-based approach to child reaping and thus use libev's support for
+that, so other libev users can use C<ev_child> watchers freely.
 
 =head3 Watcher-Specific Functions and Data Members
 
@@ -1470,17 +1538,32 @@ C<waitpid> and C<sys/wait.h> documentation for details).
 
 =head3 Examples
 
-Example: Try to exit cleanly on SIGINT and SIGTERM.
+Example: C<fork()> a new process and install a child handler to wait for
+its completion.
+
+  ev_child cw;
 
   static void
-  sigint_cb (struct ev_loop *loop, struct ev_signal *w, int revents)
+  child_cb (EV_P_ struct ev_child *w, int revents)
   {
-    ev_unloop (loop, EVUNLOOP_ALL);
+    ev_child_stop (EV_A_ w);
+    printf ("process %d exited with status %x\n", w->rpid, w->rstatus);
   }
 
-  struct ev_signal signal_watcher;
-  ev_signal_init (&signal_watcher, sigint_cb, SIGINT);
-  ev_signal_start (loop, &sigint_cb);
+  pid_t pid = fork ();
+
+  if (pid < 0)
+    // error
+  else if (pid == 0)
+    {
+      // the forked child executes here
+      exit (1);
+    }
+  else
+    {
+      ev_child_init (&cw, child_cb, pid, 0);
+      ev_child_start (EV_DEFAULT_ &cw);
+    }
 
 
 =head2 C<ev_stat> - did the file attributes just change?
@@ -1570,7 +1653,7 @@ The callback will be receive C<EV_STAT> when a change was detected,
 relative to the attributes at the time the watcher was started (or the
 last change was detected).
 
-=item ev_stat_stat (ev_stat *)
+=item ev_stat_stat (loop, ev_stat *)
 
 Updates the stat buffer immediately with new values. If you change the
 watched path in your callback, you could call this fucntion to avoid
@@ -2048,6 +2131,137 @@ believe me.
 =back
 
 
+=head2 C<ev_async> - how to wake up another event loop
+
+In general, you cannot use an C<ev_loop> from multiple threads or other
+asynchronous sources such as signal handlers (as opposed to multiple event
+loops - those are of course safe to use in different threads).
+
+Sometimes, however, you need to wake up another event loop you do not
+control, for example because it belongs to another thread. This is what
+C<ev_async> watchers do: as long as the C<ev_async> watcher is active, you
+can signal it by calling C<ev_async_send>, which is thread- and signal
+safe.
+
+This functionality is very similar to C<ev_signal> watchers, as signals,
+too, are asynchronous in nature, and signals, too, will be compressed
+(i.e. the number of callback invocations may be less than the number of
+C<ev_async_sent> calls).
+
+Unlike C<ev_signal> watchers, C<ev_async> works with any event loop, not
+just the default loop.
+
+=head3 Queueing
+
+C<ev_async> does not support queueing of data in any way. The reason
+is that the author does not know of a simple (or any) algorithm for a
+multiple-writer-single-reader queue that works in all cases and doesn't
+need elaborate support such as pthreads.
+
+That means that if you want to queue data, you have to provide your own
+queue. But at least I can tell you would implement locking around your
+queue:
+
+=over 4
+
+=item queueing from a signal handler context
+
+To implement race-free queueing, you simply add to the queue in the signal
+handler but you block the signal handler in the watcher callback. Here is an example that does that for
+some fictitiuous SIGUSR1 handler:
+
+   static ev_async mysig;
+
+   static void
+   sigusr1_handler (void)
+   {
+     sometype data;
+
+     // no locking etc.
+     queue_put (data);
+     ev_async_send (EV_DEFAULT_ &mysig);
+   }
+
+   static void
+   mysig_cb (EV_P_ ev_async *w, int revents)
+   {
+     sometype data;
+     sigset_t block, prev;
+
+     sigemptyset (&block);
+     sigaddset (&block, SIGUSR1);
+     sigprocmask (SIG_BLOCK, &block, &prev);
+
+     while (queue_get (&data))
+       process (data);
+
+     if (sigismember (&prev, SIGUSR1)
+       sigprocmask (SIG_UNBLOCK, &block, 0);
+   }
+
+(Note: pthreads in theory requires you to use C<pthread_setmask>
+instead of C<sigprocmask> when you use threads, but libev doesn't do it
+either...).
+
+=item queueing from a thread context
+
+The strategy for threads is different, as you cannot (easily) block
+threads but you can easily preempt them, so to queue safely you need to
+employ a traditional mutex lock, such as in this pthread example:
+
+   static ev_async mysig;
+   static pthread_mutex_t mymutex = PTHREAD_MUTEX_INITIALIZER;
+
+   static void
+   otherthread (void)
+   {
+     // only need to lock the actual queueing operation
+     pthread_mutex_lock (&mymutex);
+     queue_put (data);
+     pthread_mutex_unlock (&mymutex);
+
+     ev_async_send (EV_DEFAULT_ &mysig);
+   }
+
+   static void
+   mysig_cb (EV_P_ ev_async *w, int revents)
+   {
+     pthread_mutex_lock (&mymutex);
+
+     while (queue_get (&data))
+       process (data);
+
+     pthread_mutex_unlock (&mymutex);
+   }
+
+=back
+
+
+=head3 Watcher-Specific Functions and Data Members
+
+=over 4
+
+=item ev_async_init (ev_async *, callback)
+
+Initialises and configures the async watcher - it has no parameters of any
+kind. There is a C<ev_asynd_set> macro, but using it is utterly pointless,
+believe me.
+
+=item ev_async_send (loop, ev_async *)
+
+Sends/signals/activates the given C<ev_async> watcher, that is, feeds
+an C<EV_ASYNC> event on the watcher into the event loop. Unlike
+C<ev_feed_event>, this call is safe to do in other threads, signal or
+similar contexts (see the dicusssion of C<EV_ATOMIC_T> in the embedding
+section below on what exactly this means).
+
+This call incurs the overhead of a syscall only once per loop iteration,
+so while the overhead might be noticable, it doesn't apply to repeated
+calls to C<ev_async_send>.
+
+=back
+
+
 =head1 OTHER FUNCTIONS
 
 There are some other functions of possible interest. Described. Here. Now.
@@ -2295,6 +2509,41 @@ the constructor.
       io.start (fd, ev::READ);
     }
   };
+
+
+=head1 OTHER LANGUAGE BINDINGS
+
+Libev does not offer other language bindings itself, but bindings for a
+numbe rof languages exist in the form of third-party packages. If you know
+any interesting language binding in addition to the ones listed here, drop
+me a note.
+
+=over 4
+
+=item Perl
+
+The EV module implements the full libev API and is actually used to test
+libev. EV is developed together with libev. Apart from the EV core module,
+there are additional modules that implement libev-compatible interfaces
+to C<libadns> (C<EV::ADNS>), C<Net::SNMP> (C<Net::SNMP::EV>) and the
+C<libglib> event core (C<Glib::EV> and C<EV::Glib>).
+
+It can be found and installed via CPAN, its homepage is found at
+L<http://software.schmorp.de/pkg/EV>.
+
+=item Ruby
+
+Tony Arcieri has written a ruby extension that offers access to a subset
+of the libev API and adds filehandle abstractions, asynchronous DNS and
+more on top of it. It can be found via gem servers. Its homepage is at
+L<http://rev.rubyforge.org/>.
+
+=item D
+
+Leandro Lucarella has written a D language binding (F<ev.d>) for libev, to
+be found at L<http://git.llucax.com.ar/?p=software/ev.d.git;a=summary>.
+
+=back
 
 
 =head1 MACRO MAGIC
@@ -2560,6 +2809,17 @@ If defined to be C<1>, libev will compile in support for the Linux inotify
 interface to speed up C<ev_stat> watchers. Its actual availability will
 be detected at runtime.
 
+=item EV_ATOMIC_T
+
+Libev requires an integer type (suitable for storing C<0> or C<1>) whose
+access is atomic with respect to other threads or signal contexts. No such
+type is easily found in the C language, so you can provide your own type
+that you know is safe for your purposes. It is used both for signal handler "locking"
+as well as for signal and thread safety in C<ev_async> watchers.
+
+In the absense of this define, libev will use C<sig_atomic_t volatile>
+(from F<signal.h>), which is usually good enough on most platforms.
+
 =item EV_H
 
 The name of the F<ev.h> header file used to include it. The default if
@@ -2634,6 +2894,11 @@ defined to be C<0>, then they are not.
 =item EV_FORK_ENABLE
 
 If undefined or defined to be C<1>, then fork watchers are supported. If
+defined to be C<0>, then they are not.
+
+=item EV_ASYNC_ENABLE
+
+If undefined or defined to be C<1>, then async watchers are supported. If
 defined to be C<0>, then they are not.
 
 =item EV_MINIMAL
@@ -2764,11 +3029,11 @@ have to skip roughly seven (C<ld 100>) of these watchers.
 That means that changing a timer costs less than removing/adding them
 as only the relative motion in the event queue has to be paid for.
 
-=item Starting io/check/prepare/idle/signal/child watchers: O(1)
+=item Starting io/check/prepare/idle/signal/child/fork/async watchers: O(1)
 
 These just add the watcher into an array or at the head of a list.
 
-=item Stopping check/prepare/idle watchers: O(1)
+=item Stopping check/prepare/idle/fork/async watchers: O(1)
 
 =item Stopping an io/signal/child watcher: O(number_of_watchers_for_this_(fd/signal/pid % EV_PID_HASHSIZE))
 
@@ -2794,7 +3059,17 @@ on backend and wether C<ev_io_set> was used).
 Priorities are implemented by allocating some space for each
 priority. When doing priority-based operations, libev usually has to
 linearly search all the priorities, but starting/stopping and activating
-watchers becomes O(1) w.r.t. prioritiy handling.
+watchers becomes O(1) w.r.t. priority handling.
+
+=item Sending an ev_async: O(1)
+
+=item Processing ev_async_send: O(number_of_async_watchers)
+
+=item Processing signals: O(max_signal_number)
+
+Sending involves a syscall I<iff> there were no other C<ev_async_send>
+calls in the current loop iteration. Checking for async and signal events
+involves iterating over all running async watchers or all signal numbers.
 
 =back
 
